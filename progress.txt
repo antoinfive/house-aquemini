@@ -50,3 +50,50 @@
 - Custom colors are defined in globals.css and can be used as classes like `bg-wood-500`, `text-analog-600`, etc.
 - Vintage button style is available as `.btn-vintage` class
 - Card hover effects are available as `.card-vinyl` class
+
+## 2026-01-16 - Phase 2: Supabase Infrastructure COMPLETE
+
+### What was done:
+- Created comprehensive database migration (supabase/migrations/001_initial_schema.sql):
+  - profiles table - User profiles with is_owner flag, extends auth.users
+  - vinyls table - Main collection with 20+ fields for rich metadata
+  - wishlist_items table - Visual mood board with priority and position
+  - now_playing table - Current listening (manual or Spotify mode)
+  - spotify_tokens table - Encrypted OAuth tokens (owner-only access)
+  - Indexes on owner_id, artist, album, year, genre (GIN), created_at
+  - Row Level Security (RLS) policies:
+    - Public SELECT on vinyls, wishlist_items, now_playing
+    - Owner-only INSERT/UPDATE/DELETE on all tables
+    - Strict owner-only access on spotify_tokens
+  - Auto-update triggers for updated_at columns
+  - Auto-create profile on user signup via trigger
+- Created Supabase client helpers:
+  - src/lib/supabase/client.ts - Browser client using createBrowserClient
+  - src/lib/supabase/server.ts - Server client using createServerClient with cookies
+  - src/lib/supabase/index.ts - Re-exports for clean imports
+- Created auth middleware (src/middleware.ts):
+  - Session refresh on every request
+  - Protected route handling for /collection and /wishlist
+  - Proper cookie handling for Supabase auth
+
+### Verification:
+- `pnpm typecheck` - PASSES
+- `pnpm test` - PASSES (3 tests)
+
+### Next steps (Phase 3 - Authentication & Layout):
+1. Create Supabase project via dashboard (manual step)
+2. Run the migration SQL in Supabase SQL Editor
+3. Create storage buckets (vinyl-covers, vinyl-photos, audio-clips, wishlist-images)
+4. Add real Supabase credentials to .env.local
+5. Implement useAuth hook (src/lib/hooks/useAuth.ts)
+6. Build login page (src/app/(auth)/login/page.tsx)
+7. Create layout components (Header, Navigation)
+8. Build base UI component library (Button, Card, Input, Modal)
+
+### Notes for next developer:
+- The migration file is ready to run - copy contents to Supabase SQL Editor
+- Storage buckets must be created manually in Supabase dashboard
+- Middleware protects /collection and /wishlist routes
+- RLS policies ensure security at the database level
+- The profiles.is_owner flag controls admin access - set this manually for the owner user
+- Supabase client is async in server components (uses await cookies())
