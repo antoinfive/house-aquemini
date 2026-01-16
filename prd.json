@@ -1,0 +1,960 @@
+{
+  "features": [
+    {
+      "category": "authentication",
+      "description": "Owner can log in to access dashboard",
+      "steps": [
+        "Navigate to login page",
+        "Enter owner credentials",
+        "Click login button",
+        "Verify redirect to dashboard",
+        "Check that owner-only features are visible"
+      ],
+      "passes": false
+    },
+    {
+      "category": "authentication",
+      "description": "Owner can log out",
+      "steps": [
+        "Click logout button in header",
+        "Verify redirect to landing page",
+        "Check that protected routes are no longer accessible"
+      ],
+      "passes": false
+    },
+    {
+      "category": "authentication",
+      "description": "Protected routes require authentication",
+      "steps": [
+        "Attempt to access /collection without auth",
+        "Verify redirect to login page",
+        "Attempt to access /wishlist without auth",
+        "Verify redirect to login page"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Add new vinyl to collection",
+      "steps": [
+        "Log in as owner",
+        "Navigate to collection page",
+        "Click 'Add New Vinyl' button",
+        "Fill in vinyl details (artist, album, year, label)",
+        "Upload cover art image",
+        "Add genre tags",
+        "Add notes",
+        "Submit form",
+        "Verify new vinyl appears in grid"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Edit existing vinyl",
+      "steps": [
+        "Navigate to collection page",
+        "Click on a vinyl card",
+        "Click 'Edit' button",
+        "Modify vinyl details",
+        "Save changes",
+        "Verify updates are reflected in the collection"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Delete vinyl from collection",
+      "steps": [
+        "Navigate to collection page",
+        "Click on a vinyl card",
+        "Click 'Delete' button",
+        "Confirm deletion in modal",
+        "Verify vinyl is removed from collection"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Upload vinyl cover art",
+      "steps": [
+        "Open vinyl form (add or edit)",
+        "Drag and drop image onto cover art upload area",
+        "Verify image preview appears",
+        "Save vinyl",
+        "Check that image is stored in Supabase Storage",
+        "Verify cover art displays on vinyl card"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Upload custom vinyl photos",
+      "steps": [
+        "Open vinyl form",
+        "Add multiple custom photos (2-3 images)",
+        "Verify thumbnail previews appear",
+        "Save vinyl",
+        "View vinyl detail page",
+        "Verify photo gallery displays all uploaded images"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Upload audio clips",
+      "steps": [
+        "Open vinyl form",
+        "Upload an MP3 audio clip",
+        "Verify audio preview/waveform appears",
+        "Save vinyl",
+        "View vinyl detail page",
+        "Verify audio player displays and can play clip"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Search collection by artist name",
+      "steps": [
+        "Navigate to collection page",
+        "Enter artist name in search bar",
+        "Verify results update in real-time",
+        "Check that only matching vinyls are displayed",
+        "Clear search and verify all vinyls return"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Filter collection by genre",
+      "steps": [
+        "Navigate to collection page",
+        "Select a genre from filter dropdown",
+        "Verify only vinyls with that genre are displayed",
+        "Select multiple genres",
+        "Verify combined filter works",
+        "Clear filters and verify all vinyls return"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Filter collection by year range",
+      "steps": [
+        "Navigate to collection page",
+        "Set year range filter (e.g., 1970-1980)",
+        "Verify only vinyls within range are displayed",
+        "Adjust range",
+        "Verify results update accordingly"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "View vinyl detail page",
+      "steps": [
+        "Click on a vinyl card in grid",
+        "Verify detail modal/page opens",
+        "Check all metadata is displayed (artist, album, year, label, pressing info, condition)",
+        "Verify photo gallery is visible",
+        "Check that audio clips are playable",
+        "Verify notes section displays"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Add item to wishlist",
+      "steps": [
+        "Navigate to wishlist page",
+        "Click 'Add Item' button",
+        "Enter artist and album name",
+        "Upload/add cover art URL",
+        "Set priority level (High/Medium/Low)",
+        "Add tags",
+        "Set target price",
+        "Add notes",
+        "Submit form",
+        "Verify item appears in wishlist grid"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Delete wishlist item",
+      "steps": [
+        "Navigate to wishlist page",
+        "Click delete button on a wishlist card",
+        "Confirm deletion",
+        "Verify item is removed from wishlist"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Drag and drop to reorder wishlist items",
+      "steps": [
+        "Navigate to wishlist page with multiple items",
+        "Drag a wishlist card to a new position",
+        "Drop the card",
+        "Verify visual position updates immediately",
+        "Refresh the page",
+        "Verify position persists after reload"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Filter wishlist by priority",
+      "steps": [
+        "Navigate to wishlist page",
+        "Select 'High Priority' filter",
+        "Verify only high priority items are displayed",
+        "Test other priority filters",
+        "Clear filter and verify all items return"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Filter wishlist by tags",
+      "steps": [
+        "Navigate to wishlist page",
+        "Select a tag from tag filter",
+        "Verify only items with that tag are displayed",
+        "Select multiple tags",
+        "Verify combined filter works"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Manually set vinyl as now playing",
+      "steps": [
+        "Navigate to collection page",
+        "Click on a vinyl card",
+        "Click 'Set as Now Playing' button",
+        "Verify now playing display updates with vinyl details",
+        "Check that album art displays in now playing section",
+        "Verify source indicator shows 'Manual'"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Clear now playing",
+      "steps": [
+        "Set a vinyl as now playing",
+        "Click 'Clear' button in now playing section",
+        "Verify now playing section returns to empty state"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Connect Spotify account",
+      "steps": [
+        "Navigate to settings or now playing section",
+        "Click 'Connect Spotify' button",
+        "Complete OAuth flow in popup",
+        "Verify redirect back to app",
+        "Check that 'Connected' status is shown",
+        "Verify Spotify tokens are stored in database"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Spotify auto-sync to now playing",
+      "steps": [
+        "Connect Spotify account",
+        "Play a song on Spotify (any device)",
+        "Wait up to 30 seconds",
+        "Verify now playing section updates with Spotify track",
+        "Check that album art, track name, and artist display",
+        "Verify source indicator shows 'Spotify'"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Switch between manual and Spotify mode",
+      "steps": [
+        "Set a vinyl as now playing manually",
+        "Verify manual mode is active",
+        "Play a song on Spotify",
+        "Wait for auto-sync (30s)",
+        "Verify now playing switches to Spotify mode",
+        "Manually set another vinyl",
+        "Verify it switches back to manual mode"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Spotify token refresh on expiry",
+      "steps": [
+        "Connect Spotify account",
+        "Wait for access token to expire (1 hour)",
+        "Trigger a now playing update",
+        "Verify token refresh happens automatically",
+        "Check that now playing continues to work",
+        "Verify new token is stored in database"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "View public gallery without authentication",
+      "steps": [
+        "Open browser in incognito mode (not logged in)",
+        "Navigate to /gallery",
+        "Verify collection displays without login prompt",
+        "Check that all vinyls are visible",
+        "Verify no edit/delete buttons are shown"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Search in public gallery",
+      "steps": [
+        "Navigate to public gallery",
+        "Enter search term in search bar",
+        "Verify results filter client-side",
+        "Check that results update in real-time",
+        "Clear search and verify all vinyls return"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Filter public gallery by genre",
+      "steps": [
+        "Navigate to public gallery",
+        "Click on a genre filter",
+        "Verify only vinyls with that genre display",
+        "Test multiple genre selections",
+        "Clear filters and verify all return"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Filter public gallery by year",
+      "steps": [
+        "Navigate to public gallery",
+        "Set year range filter",
+        "Verify only matching vinyls display",
+        "Adjust range and check results update"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "View now playing in public gallery",
+      "steps": [
+        "Set a vinyl as now playing (as owner)",
+        "Navigate to public gallery (logged out)",
+        "Verify now playing section displays at top of gallery",
+        "Check album art and details are visible",
+        "Verify animated turntable effect is visible"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "View collection count in gallery",
+      "steps": [
+        "Navigate to public gallery",
+        "Check header/hero section",
+        "Verify total collection count is displayed",
+        "Add a vinyl as owner",
+        "Refresh gallery",
+        "Verify count increments"
+      ],
+      "passes": false
+    },
+    {
+      "category": "functional",
+      "description": "Share public gallery URL",
+      "steps": [
+        "Copy public gallery URL",
+        "Open in different browser/device",
+        "Verify collection loads correctly",
+        "Check that all public features work"
+      ],
+      "passes": false
+    },
+    {
+      "category": "security",
+      "description": "RLS prevents unauthorized vinyl edits",
+      "steps": [
+        "Log out or use non-owner account",
+        "Attempt to make direct API call to edit vinyl",
+        "Verify request is rejected with 403/401",
+        "Check that database enforces RLS policy",
+        "Verify vinyl data is unchanged"
+      ],
+      "passes": false
+    },
+    {
+      "category": "security",
+      "description": "RLS prevents unauthorized vinyl deletion",
+      "steps": [
+        "Log out or use non-owner account",
+        "Attempt to make direct API call to delete vinyl",
+        "Verify request is rejected",
+        "Check that vinyl still exists in database"
+      ],
+      "passes": false
+    },
+    {
+      "category": "security",
+      "description": "RLS prevents unauthorized wishlist edits",
+      "steps": [
+        "Log out",
+        "Attempt to make API call to modify wishlist",
+        "Verify request is rejected",
+        "Check that wishlist data is unchanged"
+      ],
+      "passes": false
+    },
+    {
+      "category": "security",
+      "description": "Spotify tokens are owner-only",
+      "steps": [
+        "Connect Spotify as owner",
+        "Log out",
+        "Attempt to access spotify_tokens table directly",
+        "Verify access is denied by RLS",
+        "Check that tokens are not exposed in any public API"
+      ],
+      "passes": false
+    },
+    {
+      "category": "visual",
+      "description": "Japanese listening room aesthetic is consistent",
+      "steps": [
+        "Review all pages of the application",
+        "Verify wood tones (#B59A76) are used consistently",
+        "Check for warm accent colors (#FF9D57)",
+        "Verify minimal, clean layout throughout",
+        "Check that vintage hi-fi elements are present",
+        "Verify typography is consistent and clean"
+      ],
+      "passes": false
+    },
+    {
+      "category": "visual",
+      "description": "Now playing displays animated turntable effect",
+      "steps": [
+        "Set a vinyl as now playing",
+        "Check now playing section",
+        "Verify album art has rotating animation",
+        "Check that rotation speed is appropriate (33⅓ or 45 RPM aesthetic)",
+        "Verify animation is smooth with no jank"
+      ],
+      "passes": false
+    },
+    {
+      "category": "visual",
+      "description": "Now playing displays VU meter animation",
+      "steps": [
+        "Set a vinyl as now playing",
+        "Check now playing section",
+        "Verify VU meter bars are present",
+        "Check that bars animate with gradient effect",
+        "Verify animation mimics analog meter movement"
+      ],
+      "passes": false
+    },
+    {
+      "category": "visual",
+      "description": "Vinyl cards show hover effects",
+      "steps": [
+        "Navigate to collection grid",
+        "Hover over a vinyl card",
+        "Verify overlay appears with details",
+        "Check that transition is smooth",
+        "Verify artist, album, and year display in overlay",
+        "Check that quick action buttons appear"
+      ],
+      "passes": false
+    },
+    {
+      "category": "visual",
+      "description": "Gallery cards have beautiful hover effects",
+      "steps": [
+        "Navigate to public gallery",
+        "Hover over various cards",
+        "Verify smooth hover transitions",
+        "Check elevation/shadow effects",
+        "Verify hover state is visually distinct"
+      ],
+      "passes": false
+    },
+    {
+      "category": "visual",
+      "description": "Smooth scroll animations in gallery",
+      "steps": [
+        "Navigate to public gallery",
+        "Scroll down the page",
+        "Verify cards fade in or slide in smoothly",
+        "Check that animation is powered by Framer Motion",
+        "Verify performance is smooth (60fps)"
+      ],
+      "passes": false
+    },
+    {
+      "category": "visual",
+      "description": "Wishlist drag visual feedback",
+      "steps": [
+        "Navigate to wishlist",
+        "Start dragging a wishlist card",
+        "Verify visual feedback during drag (opacity, scale, shadow)",
+        "Check that drop zones are indicated",
+        "Verify animation when card is dropped"
+      ],
+      "passes": false
+    },
+    {
+      "category": "visual",
+      "description": "Priority badges display correctly",
+      "steps": [
+        "Navigate to wishlist",
+        "Check wishlist cards with different priorities",
+        "Verify High priority has distinct color/badge",
+        "Verify Medium priority badge",
+        "Verify Low priority badge",
+        "Check that badges are visually prominent"
+      ],
+      "passes": false
+    },
+    {
+      "category": "responsive",
+      "description": "Mobile responsive layout (375px)",
+      "steps": [
+        "Resize browser to 375px width (iPhone SE)",
+        "Navigate to collection page",
+        "Verify grid shows 1-2 columns",
+        "Check that cards are appropriately sized",
+        "Verify navigation is mobile-friendly",
+        "Test form layouts are usable",
+        "Check that images scale correctly"
+      ],
+      "passes": false
+    },
+    {
+      "category": "responsive",
+      "description": "Tablet responsive layout (768px)",
+      "steps": [
+        "Resize browser to 768px width (iPad)",
+        "Navigate to collection page",
+        "Verify grid shows 3-4 columns",
+        "Check layout adapts properly",
+        "Verify all interactive elements are accessible",
+        "Test wishlist drag-and-drop on tablet"
+      ],
+      "passes": false
+    },
+    {
+      "category": "responsive",
+      "description": "Desktop responsive layout (1920px)",
+      "steps": [
+        "View on desktop monitor (1920px width)",
+        "Navigate to collection page",
+        "Verify grid shows 4-6 columns",
+        "Check that layout uses space efficiently",
+        "Verify no excessive whitespace",
+        "Check that all features are easily accessible"
+      ],
+      "passes": false
+    },
+    {
+      "category": "responsive",
+      "description": "Touch-friendly drag-and-drop on mobile",
+      "steps": [
+        "Open app on touch device or enable touch simulation",
+        "Navigate to wishlist",
+        "Touch and drag a wishlist item",
+        "Verify drag gesture works smoothly",
+        "Check that drop zones respond to touch",
+        "Verify position saves correctly"
+      ],
+      "passes": false
+    },
+    {
+      "category": "performance",
+      "description": "Images lazy load in grid",
+      "steps": [
+        "Navigate to collection with 20+ vinyls",
+        "Open browser DevTools Network tab",
+        "Scroll down the grid",
+        "Verify images load as they come into viewport",
+        "Check that Next.js Image component is used",
+        "Verify initial page load only loads visible images"
+      ],
+      "passes": false
+    },
+    {
+      "category": "performance",
+      "description": "Images optimized with AVIF/WebP",
+      "steps": [
+        "Open browser DevTools Network tab",
+        "Load a page with vinyl images",
+        "Check image formats served",
+        "Verify AVIF or WebP is used (depending on browser support)",
+        "Check that fallback formats are available"
+      ],
+      "passes": false
+    },
+    {
+      "category": "performance",
+      "description": "Loading skeletons display while fetching data",
+      "steps": [
+        "Navigate to collection page",
+        "Throttle network in DevTools (Slow 3G)",
+        "Refresh page",
+        "Verify skeleton loading states appear",
+        "Check that skeletons match final card layout",
+        "Verify smooth transition to loaded content"
+      ],
+      "passes": false
+    },
+    {
+      "category": "performance",
+      "description": "Pagination or infinite scroll for large collections",
+      "steps": [
+        "Add 100+ vinyls to collection",
+        "Navigate to collection page",
+        "Check that pagination or infinite scroll is implemented",
+        "Verify only limited items load initially",
+        "Test pagination controls or scroll behavior",
+        "Check that performance remains smooth"
+      ],
+      "passes": false
+    },
+    {
+      "category": "performance",
+      "description": "Database queries use proper indexes",
+      "steps": [
+        "Check Supabase database indexes",
+        "Verify indexes exist on owner_id",
+        "Verify indexes exist on artist field",
+        "Verify indexes exist on genre array",
+        "Verify indexes exist on created_at",
+        "Test query performance with large dataset"
+      ],
+      "passes": false
+    },
+    {
+      "category": "performance",
+      "description": "Search has debounce to reduce API calls",
+      "steps": [
+        "Navigate to collection search",
+        "Type quickly in search bar",
+        "Open browser DevTools Network tab",
+        "Verify API calls are debounced (not on every keystroke)",
+        "Check debounce delay is appropriate (300-500ms)",
+        "Verify search results update smoothly"
+      ],
+      "passes": false
+    },
+    {
+      "category": "accessibility",
+      "description": "All interactive elements have ARIA labels",
+      "steps": [
+        "Navigate through the application",
+        "Inspect buttons, links, and form controls",
+        "Verify each has appropriate aria-label or aria-labelledby",
+        "Check that screen reader can identify elements",
+        "Verify complex components have proper ARIA roles"
+      ],
+      "passes": false
+    },
+    {
+      "category": "accessibility",
+      "description": "Keyboard navigation works in grid",
+      "steps": [
+        "Navigate to collection grid",
+        "Use Tab key to navigate between cards",
+        "Verify focus moves logically through grid",
+        "Press Enter on a focused card",
+        "Verify card action triggers (opens detail)",
+        "Test Escape key to close modals"
+      ],
+      "passes": false
+    },
+    {
+      "category": "accessibility",
+      "description": "Focus indicators are visible",
+      "steps": [
+        "Navigate application using keyboard only",
+        "Tab through interactive elements",
+        "Verify focus indicator is visible on each element",
+        "Check that focus indicator has sufficient contrast",
+        "Verify custom focus styles match design aesthetic"
+      ],
+      "passes": false
+    },
+    {
+      "category": "accessibility",
+      "description": "All images have alt text",
+      "steps": [
+        "Navigate to collection and gallery",
+        "Inspect image elements",
+        "Verify each image has meaningful alt text",
+        "Check that alt text describes album art appropriately",
+        "Verify decorative images have empty alt=\"\""
+      ],
+      "passes": false
+    },
+    {
+      "category": "integration",
+      "description": "Supabase Storage handles image uploads",
+      "steps": [
+        "Upload an image via vinyl form",
+        "Check browser DevTools Network tab",
+        "Verify upload goes to Supabase Storage API",
+        "Check Supabase dashboard storage bucket",
+        "Verify image file exists in correct bucket",
+        "Verify public URL is returned and accessible"
+      ],
+      "passes": false
+    },
+    {
+      "category": "integration",
+      "description": "Supabase Storage handles audio uploads",
+      "steps": [
+        "Upload an audio clip via vinyl form",
+        "Check that file uploads to audio-clips bucket",
+        "Verify file size limit is enforced (10MB)",
+        "Check that public URL is returned",
+        "Verify audio can be streamed from URL"
+      ],
+      "passes": false
+    },
+    {
+      "category": "integration",
+      "description": "Spotify OAuth flow completes successfully",
+      "steps": [
+        "Click 'Connect Spotify' button",
+        "Verify redirect to Spotify authorization page",
+        "Approve the authorization",
+        "Verify redirect back to app at callback URL",
+        "Check that authorization code is exchanged for tokens",
+        "Verify tokens are stored in spotify_tokens table",
+        "Check that connection status updates in UI"
+      ],
+      "passes": false
+    },
+    {
+      "category": "integration",
+      "description": "Spotify API polling works correctly",
+      "steps": [
+        "Connect Spotify account",
+        "Play a song on Spotify",
+        "Check browser DevTools Network tab",
+        "Verify API calls to /api/spotify/current-track every 30s",
+        "Check that track data is fetched correctly",
+        "Verify now_playing table updates in Supabase"
+      ],
+      "passes": false
+    },
+    {
+      "category": "integration",
+      "description": "Optional Discogs API integration (if implemented)",
+      "steps": [
+        "Open vinyl form",
+        "Click 'Search Discogs' button",
+        "Enter artist and album",
+        "Verify Discogs search results appear",
+        "Select a release",
+        "Verify vinyl data auto-populates",
+        "Check that cover art is imported",
+        "Verify manual override is possible"
+      ],
+      "passes": false
+    },
+    {
+      "category": "deployment",
+      "description": "Vercel deployment succeeds",
+      "steps": [
+        "Connect GitHub repo to Vercel",
+        "Configure environment variables",
+        "Trigger deployment",
+        "Verify build completes without errors",
+        "Check deployment logs for issues",
+        "Access deployed URL",
+        "Verify application loads correctly"
+      ],
+      "passes": false
+    },
+    {
+      "category": "deployment",
+      "description": "Environment variables configured correctly",
+      "steps": [
+        "Check Vercel dashboard environment variables",
+        "Verify NEXT_PUBLIC_SUPABASE_URL is set",
+        "Verify NEXT_PUBLIC_SUPABASE_ANON_KEY is set",
+        "Verify SPOTIFY_CLIENT_ID is set",
+        "Verify SPOTIFY_CLIENT_SECRET is set",
+        "Verify SPOTIFY_REDIRECT_URI matches production URL",
+        "Test that application can connect to Supabase",
+        "Test that Spotify OAuth uses correct redirect"
+      ],
+      "passes": false
+    },
+    {
+      "category": "deployment",
+      "description": "Spotify OAuth callback URL configured for production",
+      "steps": [
+        "Open Spotify Developer Dashboard",
+        "Check registered redirect URIs",
+        "Verify production callback URL is registered",
+        "Test Spotify login on production site",
+        "Verify OAuth flow completes without errors"
+      ],
+      "passes": false
+    },
+    {
+      "category": "deployment",
+      "description": "Custom domain configured (optional)",
+      "steps": [
+        "Add custom domain in Vercel dashboard",
+        "Configure DNS records",
+        "Wait for DNS propagation",
+        "Access site via custom domain",
+        "Verify SSL certificate is active",
+        "Check that all features work on custom domain"
+      ],
+      "passes": false
+    },
+    {
+      "category": "edge-case",
+      "description": "Handle missing vinyl cover art gracefully",
+      "steps": [
+        "Add vinyl without cover art",
+        "View in collection grid",
+        "Verify placeholder image or icon displays",
+        "Check that layout doesn't break",
+        "Verify vinyl is still functional"
+      ],
+      "passes": false
+    },
+    {
+      "category": "edge-case",
+      "description": "Handle very long artist/album names",
+      "steps": [
+        "Add vinyl with very long artist name (100+ characters)",
+        "Add vinyl with very long album name",
+        "View in collection grid",
+        "Verify text truncates appropriately",
+        "Check that card layout doesn't break",
+        "View detail page and verify full text is visible"
+      ],
+      "passes": false
+    },
+    {
+      "category": "edge-case",
+      "description": "Handle empty collection gracefully",
+      "steps": [
+        "Delete all vinyls from collection",
+        "Navigate to collection page",
+        "Verify empty state message displays",
+        "Check that 'Add Vinyl' CTA is prominent",
+        "Verify no errors in console"
+      ],
+      "passes": false
+    },
+    {
+      "category": "edge-case",
+      "description": "Handle empty wishlist gracefully",
+      "steps": [
+        "Navigate to wishlist with no items",
+        "Verify empty state message displays",
+        "Check that 'Add Item' CTA is visible",
+        "Verify drag-and-drop doesn't error"
+      ],
+      "passes": false
+    },
+    {
+      "category": "edge-case",
+      "description": "Handle Spotify disconnection",
+      "steps": [
+        "Connect Spotify account",
+        "Revoke access in Spotify settings",
+        "Return to app",
+        "Wait for next API poll",
+        "Verify app handles error gracefully",
+        "Check that user is prompted to reconnect",
+        "Verify manual mode still works"
+      ],
+      "passes": false
+    },
+    {
+      "category": "edge-case",
+      "description": "Handle Spotify API rate limits",
+      "steps": [
+        "Simulate rapid API requests to Spotify",
+        "Check that rate limit responses are handled",
+        "Verify app doesn't crash",
+        "Check that polling backs off appropriately",
+        "Verify user sees appropriate message"
+      ],
+      "passes": false
+    },
+    {
+      "category": "edge-case",
+      "description": "Handle network errors gracefully",
+      "steps": [
+        "Throttle network to offline in DevTools",
+        "Attempt to load collection",
+        "Verify error message displays",
+        "Check that app doesn't crash",
+        "Restore network",
+        "Verify app recovers and loads data"
+      ],
+      "passes": false
+    },
+    {
+      "category": "edge-case",
+      "description": "Handle large file uploads",
+      "steps": [
+        "Attempt to upload image larger than 10MB",
+        "Verify file size validation triggers",
+        "Check that user sees error message",
+        "Attempt to upload very large audio file",
+        "Verify size limit is enforced",
+        "Upload valid-sized files and verify success"
+      ],
+      "passes": false
+    },
+    {
+      "category": "edge-case",
+      "description": "Handle special characters in search",
+      "steps": [
+        "Enter special characters in search (!@#$%)",
+        "Verify search doesn't crash",
+        "Check that results handle special chars appropriately",
+        "Test Unicode characters (Japanese, emoji)",
+        "Verify search works correctly"
+      ],
+      "passes": false
+    },
+    {
+      "category": "edge-case",
+      "description": "Handle concurrent now playing updates",
+      "steps": [
+        "Manually set vinyl as now playing",
+        "Immediately have Spotify start playing",
+        "Check that race condition is handled",
+        "Verify final state is consistent",
+        "Check that no duplicate rows exist in now_playing table"
+      ],
+      "passes": false
+    }
+  ]
+}

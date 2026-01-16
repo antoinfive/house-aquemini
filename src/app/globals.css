@@ -1,26 +1,202 @@
 @import "tailwindcss";
 
+/* Japanese Listening Room Aesthetic Theme */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Wood tones - Primary palette */
+  --wood-50: #faf8f5;
+  --wood-100: #f2ede5;
+  --wood-200: #e5dbc9;
+  --wood-300: #d4c4a8;
+  --wood-400: #c5ad8a;
+  --wood-500: #b59a76;
+  --wood-600: #9a7f5d;
+  --wood-700: #7d6548;
+  --wood-800: #665339;
+  --wood-900: #54452f;
+
+  /* Warm accent */
+  --warm-50: #fff7f0;
+  --warm-100: #ffedd9;
+  --warm-200: #ffd9b3;
+  --warm-300: #ffbe80;
+  --warm-400: #ff9d57;
+  --warm-500: #ff7d2e;
+  --warm-600: #e65a0c;
+  --warm-700: #bf4509;
+  --warm-800: #99380d;
+  --warm-900: #7d310f;
+
+  /* Analog equipment grays */
+  --analog-50: #f7f7f6;
+  --analog-100: #e8e8e5;
+  --analog-200: #d1d1cc;
+  --analog-300: #b5b5ad;
+  --analog-400: #95958a;
+  --analog-500: #6b6b5e;
+  --analog-600: #57574c;
+  --analog-700: #40403a;
+  --analog-800: #35352f;
+  --analog-900: #2d2d28;
+
+  /* Background and foreground */
+  --background: var(--wood-50);
+  --foreground: var(--analog-800);
+
+  /* Component colors */
+  --card-bg: #ffffff;
+  --card-border: var(--wood-200);
+  --muted: var(--analog-100);
+  --muted-foreground: var(--analog-500);
+  --accent: var(--warm-500);
+  --accent-foreground: #ffffff;
 }
 
 @theme inline {
+  /* Colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  /* Wood palette */
+  --color-wood-50: var(--wood-50);
+  --color-wood-100: var(--wood-100);
+  --color-wood-200: var(--wood-200);
+  --color-wood-300: var(--wood-300);
+  --color-wood-400: var(--wood-400);
+  --color-wood-500: var(--wood-500);
+  --color-wood-600: var(--wood-600);
+  --color-wood-700: var(--wood-700);
+  --color-wood-800: var(--wood-800);
+  --color-wood-900: var(--wood-900);
+
+  /* Warm palette */
+  --color-warm-50: var(--warm-50);
+  --color-warm-100: var(--warm-100);
+  --color-warm-200: var(--warm-200);
+  --color-warm-300: var(--warm-300);
+  --color-warm-400: var(--warm-400);
+  --color-warm-500: var(--warm-500);
+  --color-warm-600: var(--warm-600);
+  --color-warm-700: var(--warm-700);
+  --color-warm-800: var(--warm-800);
+  --color-warm-900: var(--warm-900);
+
+  /* Analog palette */
+  --color-analog-50: var(--analog-50);
+  --color-analog-100: var(--analog-100);
+  --color-analog-200: var(--analog-200);
+  --color-analog-300: var(--analog-300);
+  --color-analog-400: var(--analog-400);
+  --color-analog-500: var(--analog-500);
+  --color-analog-600: var(--analog-600);
+  --color-analog-700: var(--analog-700);
+  --color-analog-800: var(--analog-800);
+  --color-analog-900: var(--analog-900);
+
+  /* Semantic colors */
+  --color-card: var(--card-bg);
+  --color-card-border: var(--card-border);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  /* Typography */
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+  --font-serif: "Georgia", "Times New Roman", serif;
 }
 
+/* Dark mode - warmer, more intimate feel */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #1a1714;
+    --foreground: var(--wood-100);
+    --card-bg: #252119;
+    --card-border: var(--analog-700);
+    --muted: var(--analog-800);
+    --muted-foreground: var(--analog-400);
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+/* Vintage button styles */
+.btn-vintage {
+  background: linear-gradient(180deg, var(--wood-400) 0%, var(--wood-600) 100%);
+  border: 1px solid var(--wood-700);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 2px 4px rgba(0, 0, 0, 0.2);
+  color: white;
+  transition: all 0.15s ease;
+}
+
+.btn-vintage:hover {
+  background: linear-gradient(180deg, var(--wood-500) 0%, var(--wood-700) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 3px 6px rgba(0, 0, 0, 0.25);
+}
+
+.btn-vintage:active {
+  background: linear-gradient(180deg, var(--wood-600) 0%, var(--wood-700) 100%);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Card styles with subtle shadow */
+.card-vinyl {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 0.5rem;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.05),
+    0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.card-vinyl:hover {
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.1),
+    0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Turntable rotation animation */
+@keyframes spin-record {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-record {
+  animation: spin-record 1.8s linear infinite;
+}
+
+/* VU meter animation */
+@keyframes vu-bounce {
+  0%, 100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.animate-vu-meter {
+  animation: vu-bounce 0.4s ease-in-out infinite;
+  transform-origin: bottom;
+}
+
+/* Focus styles for accessibility */
+.focus-ring:focus-visible {
+  outline: 2px solid var(--warm-500);
+  outline-offset: 2px;
 }

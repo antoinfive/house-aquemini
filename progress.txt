@@ -1,0 +1,52 @@
+# Aces Library Development Progress
+
+## 2026-01-16 - Phase 1: Foundation Setup COMPLETE
+
+### What was done:
+- Initialized Next.js 16 with TypeScript, Tailwind CSS v4, ESLint, and App Router
+- Installed all core dependencies:
+  - @supabase/supabase-js & @supabase/ssr for database/auth
+  - framer-motion for animations
+  - @dnd-kit/core & @dnd-kit/sortable for drag-and-drop
+  - zustand for state management
+  - react-hot-toast for notifications
+  - sharp for image optimization
+- Set up testing infrastructure with Vitest + React Testing Library
+- Configured Tailwind CSS v4 with Japanese listening room theme:
+  - Wood tones palette (50-900 shades, primary #B59A76)
+  - Warm accent palette (#FF9D57)
+  - Analog equipment grays (#6B6B5E)
+  - Dark mode support
+  - Custom .btn-vintage and .card-vinyl utility classes
+  - Turntable rotation and VU meter animations
+- Created project directory structure following PRD spec:
+  - src/app/(auth), (dashboard), (public), api routes
+  - src/components/collection, wishlist, now-playing, gallery, ui, shared, layout
+  - src/lib/supabase, spotify, hooks, store, types
+  - supabase/migrations
+- Created TypeScript type definitions for all database entities
+- Created basic landing page with vinyl-themed design
+- Set up .env.example with all required environment variables
+- Added npm scripts: typecheck, test, test:watch
+
+### Verification:
+- `pnpm typecheck` - PASSES
+- `pnpm test` - PASSES (3 tests)
+- `pnpm build` - PASSES
+
+### Next steps (Phase 2 - Supabase Setup):
+1. Create Supabase project via dashboard
+2. Run database migrations for all 5 tables (profiles, vinyls, wishlist_items, now_playing, spotify_tokens)
+3. Set up indexes on owner_id, artist, genre, created_at
+4. Enable RLS policies on all tables
+5. Create storage buckets (vinyl-covers, vinyl-photos, audio-clips, wishlist-images)
+6. Create Supabase client helpers (src/lib/supabase/client.ts, server.ts)
+7. Generate TypeScript types from Supabase
+
+### Notes for next developer:
+- Project uses Tailwind CSS v4 which uses @theme blocks in CSS instead of tailwind.config.ts
+- Use pnpm as the package manager
+- The src/ directory structure is used (not root-level app/)
+- Custom colors are defined in globals.css and can be used as classes like `bg-wood-500`, `text-analog-600`, etc.
+- Vintage button style is available as `.btn-vintage` class
+- Card hover effects are available as `.card-vinyl` class
