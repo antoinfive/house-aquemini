@@ -3,7 +3,7 @@
 ## Project Overview
 A sophisticated vinyl collection management system with a subtle Japanese listening room aesthetic. Features collection tracking, visual wishlist mood board, dual now-playing (manual + Spotify), and a beautiful public gallery for sharing your collection.
 
-**Current Status**: Phase 2 Complete - Supabase Infrastructure ready. Database migration with all 5 tables, RLS policies, and indexes created. Supabase client helpers (browser + server) and auth middleware implemented.
+**Current Status**: Phase 3 In Progress - Authentication & Layout. Login page, useAuth hook, base UI components (Button, Input, Card), and Header with navigation implemented. Owner can sign in/out and protected routes are guarded.
 
 ## Technology Stack
 - **Frontend**: Next.js 16 (App Router) with TypeScript

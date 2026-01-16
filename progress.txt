@@ -97,3 +97,51 @@
 - RLS policies ensure security at the database level
 - The profiles.is_owner flag controls admin access - set this manually for the owner user
 - Supabase client is async in server components (uses await cookies())
+
+## 2026-01-16 - Phase 3: Authentication & Layout IN PROGRESS
+
+### What was done:
+- Created useAuth hook (src/lib/hooks/useAuth.ts):
+  - Session management with Supabase auth
+  - Profile fetching from profiles table
+  - isOwner flag check for admin access
+  - signIn, signOut, and refreshSession methods
+  - Auto-refresh on auth state changes
+- Created base UI component library (src/components/ui/):
+  - Button component with vintage, ghost, outline variants
+  - Input component with label and error support
+  - Card component with CardHeader, CardTitle, CardContent
+  - Uses existing .btn-vintage and .card-vinyl CSS classes
+- Created login page (src/app/(auth)/login/page.tsx):
+  - Email/password form with Supabase auth
+  - Error display and loading states
+  - Redirects to /collection on successful login
+  - Japanese listening room aesthetic styling
+- Created Header component (src/components/layout/Header.tsx):
+  - Logo with vinyl icon
+  - Navigation links (Gallery, Collection, Wishlist)
+  - Collection/Wishlist only shown to owners
+  - Sign in/out functionality
+  - User email display
+  - Mobile menu button (ready for mobile nav implementation)
+- Updated root layout to include Header
+
+### Verification:
+- `pnpm typecheck` - PASSES
+- `pnpm test` - PASSES (3 tests)
+
+### Next steps (Phase 3 continued):
+1. Create Supabase project via dashboard (manual step required)
+2. Run the migration SQL in Supabase SQL Editor
+3. Create storage buckets (vinyl-covers, vinyl-photos, audio-clips, wishlist-images)
+4. Add real Supabase credentials to .env.local
+5. Test login flow end-to-end
+6. Implement mobile navigation menu
+7. Continue to Phase 4: Vinyl Collection CRUD
+
+### Notes for next developer:
+- Login redirects to /collection after success - ensure collection page exists before testing
+- Header shows different nav items based on isOwner flag from profiles table
+- Mobile menu button exists but nav drawer not implemented yet
+- useAuth hook auto-refreshes when auth state changes
+- UI components export from src/components/ui/index.ts for clean imports
