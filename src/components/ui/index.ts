@@ -6,3 +6,5 @@ export type { InputProps } from './Input';
 
 export { Card, CardHeader, CardTitle, CardContent } from './Card';
 export type { CardProps, CardHeaderProps, CardTitleProps, CardContentProps } from './Card';
+
+export { Modal } from './Modal';

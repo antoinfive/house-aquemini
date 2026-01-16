@@ -145,3 +145,52 @@
 - Mobile menu button exists but nav drawer not implemented yet
 - useAuth hook auto-refreshes when auth state changes
 - UI components export from src/components/ui/index.ts for clean imports
+
+## 2026-01-16 - Phase 4: Vinyl Collection CRUD (Partial) IN PROGRESS
+
+### What was done:
+- Created vinyls API routes (src/app/api/vinyls/):
+  - route.ts: GET with filtering (search, genre, year range), POST for creating vinyls
+  - [id]/route.ts: GET single vinyl, PATCH for updates, DELETE for removal
+  - All routes check owner authentication and is_owner flag
+- Created Zustand vinyl store (src/lib/store/vinylStore.ts):
+  - Full state management for vinyls collection
+  - Async actions for CRUD operations with optimistic updates
+  - Filter state management
+- Created useVinyls hook (src/lib/hooks/useVinyls.ts):
+  - Wraps store with convenient API
+  - Auto-fetches on mount
+  - Provides search, filter, and CRUD methods
+- Created collection UI components (src/components/collection/):
+  - VinylCard.tsx: Card with cover art, hover overlay, quick actions (edit, delete, now playing)
+  - VinylGrid.tsx: Responsive grid with loading skeletons and empty state
+  - VinylForm.tsx: Complete form with all vinyl fields, genre selection, condition dropdowns
+- Created Modal component (src/components/ui/Modal.tsx):
+  - Portal-based modal with escape key and overlay click handling
+  - Multiple sizes (sm, md, lg, xl)
+- Created Collection page (src/app/(dashboard)/collection/page.tsx):
+  - Full CRUD UI with add/edit/delete modals
+  - Search with debounce
+  - Toast notifications for actions
+  - Owner-only actions (add, edit, delete buttons)
+
+### Verification:
+- `pnpm typecheck` - PASSES
+- `pnpm test` - PASSES (3 tests)
+
+### Next steps (Phase 4 continued):
+1. Create Supabase project and run migrations (manual step)
+2. Test CRUD operations end-to-end with real database
+3. Add media upload components (ImageUpload, AudioUpload)
+4. Add cover_art_url field to VinylForm (pending storage bucket setup)
+5. Add FilterBar component for genre/year filtering
+6. Implement vinyl detail page (/collection/[id])
+
+### Notes for next developer:
+- Collection page is functional but requires Supabase to be set up to work
+- VinylForm does not yet include cover art upload - needs ImageUpload component
+- The grid is responsive: 1 col mobile, 2 col sm, 3 col md, 4 col lg, 5 col xl
+- Delete confirmation modal prevents accidental deletions
+- Search debounces at 300ms to reduce API calls
+- Zustand store exports from src/lib/store/index.ts
+- useVinyls hook refetches when filters change
