@@ -271,3 +271,51 @@
 - Year range is inclusive on both ends (gte/lte)
 - Filters auto-refetch via useVinyls hook when changed
 - Filter panel is collapsed by default on page load
+
+## 2026-01-24 - Phase 4: View Vinyl Detail Page COMPLETE
+
+### What was done:
+- Created VinylDetail component (src/components/collection/VinylDetail.tsx):
+  - Large cover art display with fallback placeholder
+  - Full metadata display: year, format, RPM, label, catalog number, country
+  - Condition section showing media and sleeve condition ratings
+  - Pressing info section
+  - Tracklist display using existing TracklistDisplay component
+  - Notes section with whitespace preservation
+  - Purchase info section
+  - Photo gallery with thumbnail grid and lightbox modal
+  - Audio clips section with play/pause controls and native audio players
+  - Discogs link with external link indicator
+  - Genre tags display
+  - Timestamps showing creation and update dates
+  - Owner actions: edit, delete, set as now playing
+- Created vinyl detail page (src/app/(dashboard)/collection/[id]/page.tsx):
+  - Fetches vinyl data from /api/vinyls/[id]
+  - Loading skeleton while fetching
+  - Error handling with user-friendly messages
+  - Edit modal with VinylForm
+  - Delete confirmation modal
+  - Set as now playing functionality (calls /api/now-playing)
+  - Navigation back to collection page
+- Updated collection page (src/app/(dashboard)/collection/page.tsx):
+  - Added onVinylClick handler that navigates to detail page
+  - Clicking vinyl cards now opens the detail view
+- Exported VinylDetail from components/collection/index.ts
+
+### Verification:
+- `pnpm typecheck` - PASSES
+- `pnpm test` - PASSES (3 tests)
+
+### Next steps (Phase 4 continued):
+1. Create Supabase Storage buckets manually (vinyl-covers, vinyl-photos, audio-clips)
+2. Test detail page end-to-end with real Supabase project
+3. Consider adding AudioUpload for audio clips
+4. Continue to Phase 5: Wishlist Mood Board
+
+### Notes for next developer:
+- VinylDetail component is self-contained with all the logic for displaying and interacting with a vinyl
+- Photo lightbox supports keyboard navigation (would benefit from Escape key handling)
+- Audio clips use native HTML5 audio element for maximum compatibility
+- Detail page uses React 19's `use()` hook for unwrapping params Promise
+- Edit/Delete modals on detail page work independently from collection page modals
+- The /api/now-playing endpoint may need to be created if it doesn't exist yet

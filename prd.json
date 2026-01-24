@@ -161,7 +161,7 @@
         "Check that audio clips are playable",
         "Verify notes section displays"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "category": "functional",

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth, useVinyls } from '@/lib/hooks';
 import { VinylGrid, VinylForm, FilterBar } from '@/components/collection';
 import { DiscogsSearchModal } from '@/components/discogs';
@@ -9,6 +10,7 @@ import type { Vinyl, VinylFormData } from '@/lib/types';
 import toast from 'react-hot-toast';
 
 export default function CollectionPage() {
+  const router = useRouter();
   const { isOwner, isLoading: authLoading } = useAuth();
   const {
     vinyls,
@@ -57,6 +59,10 @@ export default function CollectionPage() {
 
   const handleDeleteClick = (vinyl: Vinyl) => {
     setDeleteConfirm(vinyl);
+  };
+
+  const handleVinylClick = (vinyl: Vinyl) => {
+    router.push(`/collection/${vinyl.id}`);
   };
 
   const handleFormSubmit = async (data: VinylFormData) => {
@@ -214,6 +220,7 @@ export default function CollectionPage() {
           vinyls={vinyls}
           isLoading={isLoading}
           isOwner={isOwner}
+          onVinylClick={handleVinylClick}
           onEdit={handleEditClick}
           onDelete={handleDeleteClick}
           emptyMessage={
