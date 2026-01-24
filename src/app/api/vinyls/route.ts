@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   // Parse query params for filtering
   const searchParams = request.nextUrl.searchParams;
   const search = searchParams.get('search');
-  const genre = searchParams.get('genre');
+  const genres = searchParams.getAll('genre');
   const yearStart = searchParams.get('yearStart');
   const yearEnd = searchParams.get('yearEnd');
 
@@ -22,9 +22,9 @@ export async function GET(request: NextRequest) {
     query = query.or(`artist.ilike.%${search}%,album.ilike.%${search}%`);
   }
 
-  // Apply genre filter (array contains)
-  if (genre) {
-    query = query.contains('genre', [genre]);
+  // Apply genre filter (overlaps - records with ANY of the selected genres)
+  if (genres.length > 0) {
+    query = query.overlaps('genre', genres);
   }
 
   // Apply year range filter

@@ -136,7 +136,7 @@
         "Verify combined filter works",
         "Clear filters and verify all vinyls return"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "category": "functional",
@@ -148,7 +148,7 @@
         "Adjust range",
         "Verify results update accordingly"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "category": "functional",

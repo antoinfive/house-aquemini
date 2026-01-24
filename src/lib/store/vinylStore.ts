@@ -56,7 +56,9 @@ export const useVinylStore = create<VinylState>((set, get) => ({
     try {
       const params = new URLSearchParams();
       if (filters.search) params.append('search', filters.search);
-      if (filters.genre?.length) params.append('genre', filters.genre[0]);
+      if (filters.genre?.length) {
+        filters.genre.forEach((g) => params.append('genre', g));
+      }
       if (filters.yearStart) params.append('yearStart', filters.yearStart.toString());
       if (filters.yearEnd) params.append('yearEnd', filters.yearEnd.toString());
 

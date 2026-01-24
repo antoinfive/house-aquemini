@@ -232,3 +232,42 @@
 - Component handles its own upload state and error display
 - When editing a vinyl, the existing cover_art_url is shown as preview
 - Removing an image only clears the URL - it doesn't delete the file from storage (cleanup can be added later)
+
+## 2026-01-24 - Phase 4: Collection Filtering Feature COMPLETE
+
+### What was done:
+- Created FilterBar component (src/components/collection/FilterBar.tsx):
+  - Collapsible filter panel with expand/collapse toggle
+  - Genre multi-select with toggle buttons (same 14 genres as VinylForm)
+  - Year range inputs (start and end year)
+  - Active filter count badge displayed in header
+  - Clear all filters button
+  - Accessible: proper ARIA attributes, keyboard navigable
+  - Matches industrial design system (steel surfaces, brass accents)
+- Updated vinylStore to send multiple genres to API:
+  - Changed from sending only first genre to sending all selected genres
+- Updated vinyls API route:
+  - Changed from `contains` (AND logic) to `overlaps` (OR logic)
+  - Now shows vinyls that match ANY of the selected genres
+  - Supports multiple genre query params
+- Integrated FilterBar into collection page:
+  - Added filterByGenre and filterByYearRange from useVinyls hook
+  - FilterBar positioned below search bar
+  - Separate clear actions for search vs all filters
+
+### Verification:
+- `pnpm typecheck` - PASSES
+- `pnpm test` - PASSES (3 tests)
+
+### Next steps (Phase 4 continued):
+1. Create Supabase Storage buckets manually (vinyl-covers, vinyl-photos, audio-clips)
+2. Test filtering end-to-end with real Supabase project
+3. Implement vinyl detail page (/collection/[id])
+4. Consider adding AudioUpload for audio clips
+
+### Notes for next developer:
+- FilterBar uses same COMMON_GENRES array as VinylForm - keep in sync if adding genres
+- Genre filter uses OR logic: selecting Jazz + Soul shows vinyls tagged with either genre
+- Year range is inclusive on both ends (gte/lte)
+- Filters auto-refetch via useVinyls hook when changed
+- Filter panel is collapsed by default on page load

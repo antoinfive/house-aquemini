@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { useAuth, useVinyls } from '@/lib/hooks';
-import { VinylGrid, VinylForm } from '@/components/collection';
+import { VinylGrid, VinylForm, FilterBar } from '@/components/collection';
 import { DiscogsSearchModal } from '@/components/discogs';
 import { Button, Input, Modal } from '@/components/ui';
 import type { Vinyl, VinylFormData } from '@/lib/types';
@@ -18,6 +18,8 @@ export default function CollectionPage() {
     updateVinyl,
     removeVinyl,
     search,
+    filterByGenre,
+    filterByYearRange,
     clearFilters,
     filters,
   } = useVinyls();
@@ -112,6 +114,11 @@ export default function CollectionPage() {
 
   const handleClearSearch = () => {
     setSearchQuery('');
+    search('');
+  };
+
+  const handleClearAllFilters = () => {
+    setSearchQuery('');
     clearFilters();
   };
 
@@ -176,11 +183,21 @@ export default function CollectionPage() {
                 />
               </div>
             </div>
-            {(searchQuery || filters.search) && (
+            {searchQuery && (
               <Button variant="ghost" onClick={handleClearSearch}>
-                Clear
+                Clear Search
               </Button>
             )}
+          </div>
+
+          {/* Filters */}
+          <div className="mt-4">
+            <FilterBar
+              filters={filters}
+              onFilterByGenre={filterByGenre}
+              onFilterByYearRange={filterByYearRange}
+              onClearFilters={handleClearAllFilters}
+            />
           </div>
         </div>
       </div>
