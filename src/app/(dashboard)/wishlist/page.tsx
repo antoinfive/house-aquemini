@@ -119,17 +119,68 @@ export default function WishlistPage() {
 
     setIsSubmitting(true);
     try {
-      // Create vinyl from wishlist item
-      const vinylData: VinylFormData = {
-        artist: addToCollectionConfirm.artist,
-        album: addToCollectionConfirm.album,
-        year: addToCollectionConfirm.year || undefined,
-        label: addToCollectionConfirm.label || undefined,
-        cover_art_url: addToCollectionConfirm.cover_art_url || undefined,
-        discogs_id: addToCollectionConfirm.discogs_id || undefined,
-        genre: [],
-        notes: addToCollectionConfirm.notes || undefined,
+      let vinylData: VinylFormData;
+
+      // Helper to proxy Discogs image to Supabase Storage
+      const proxyImage = async (imageUrl: string, discogsId?: string): Promise<string | null> => {
+        try {
+          const response = await fetch('/api/discogs/image-proxy', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ imageUrl, discogsId }),
+          });
+          const data = await response.json();
+          return data.data?.url || null;
+        } catch {
+          return null;
+        }
       };
+
+      // If we have a discogs_id, fetch full release data including tracklist
+      if (addToCollectionConfirm.discogs_id) {
+        const response = await fetch(`/api/discogs/release/${addToCollectionConfirm.discogs_id}`);
+        const result = await response.json();
+
+        if (response.ok && result.data?.vinyl) {
+          // Proxy the cover image to Supabase Storage
+          let coverArtUrl: string | undefined;
+          if (result.data.coverImageUrl) {
+            const proxiedUrl = await proxyImage(result.data.coverImageUrl, addToCollectionConfirm.discogs_id);
+            coverArtUrl = proxiedUrl || undefined;
+          }
+
+          // Use full Discogs data (includes tracklist, genres, etc.)
+          vinylData = {
+            ...result.data.vinyl,
+            cover_art_url: coverArtUrl,
+            // Preserve notes from wishlist item
+            notes: addToCollectionConfirm.notes || result.data.vinyl.notes,
+          };
+        } else {
+          // Fallback to basic wishlist data if Discogs fetch fails
+          vinylData = {
+            artist: addToCollectionConfirm.artist,
+            album: addToCollectionConfirm.album,
+            year: addToCollectionConfirm.year || undefined,
+            label: addToCollectionConfirm.label || undefined,
+            cover_art_url: addToCollectionConfirm.cover_art_url || undefined,
+            discogs_id: addToCollectionConfirm.discogs_id || undefined,
+            genre: [],
+            notes: addToCollectionConfirm.notes || undefined,
+          };
+        }
+      } else {
+        // No discogs_id, use basic wishlist data
+        vinylData = {
+          artist: addToCollectionConfirm.artist,
+          album: addToCollectionConfirm.album,
+          year: addToCollectionConfirm.year || undefined,
+          label: addToCollectionConfirm.label || undefined,
+          cover_art_url: addToCollectionConfirm.cover_art_url || undefined,
+          genre: [],
+          notes: addToCollectionConfirm.notes || undefined,
+        };
+      }
 
       const vinyl = await addVinyl(vinylData);
       if (vinyl) {
