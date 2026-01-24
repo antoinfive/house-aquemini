@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from 'react';
 import { Button, Input } from '@/components/ui';
+import { ImageUpload } from '@/components/shared';
 import type { VinylFormData, Vinyl } from '@/lib/types';
 
 interface VinylFormProps {
@@ -56,6 +57,7 @@ export function VinylForm({ initialData, onSubmit, onCancel, isLoading = false }
     rpm: initialData?.rpm || undefined,
     sleeve_condition: initialData?.sleeve_condition || undefined,
     media_condition: initialData?.media_condition || undefined,
+    cover_art_url: initialData?.cover_art_url || undefined,
     genre: initialData?.genre || [],
     notes: initialData?.notes || undefined,
     purchase_info: initialData?.purchase_info || undefined,
@@ -123,8 +125,29 @@ export function VinylForm({ initialData, onSubmit, onCancel, isLoading = false }
     await onSubmit(formData);
   };
 
+  const handleCoverArtChange = (url: string | undefined) => {
+    setFormData((prev) => ({
+      ...prev,
+      cover_art_url: url,
+    }));
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Cover Art Upload */}
+      <div className="space-y-4">
+        <h3 className="input-label">
+          Cover Art
+        </h3>
+        <ImageUpload
+          value={formData.cover_art_url}
+          onChange={handleCoverArtChange}
+          bucket="vinyl-covers"
+          maxSizeMB={5}
+          label=""
+        />
+      </div>
+
       {/* Required Fields */}
       <div className="space-y-4">
         <h3 className="input-label">

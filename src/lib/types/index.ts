@@ -98,6 +98,7 @@ export interface VinylFormData {
   rpm?: number;
   sleeve_condition?: string;
   media_condition?: string;
+  cover_art_url?: string;
   genre: string[];
   notes?: string;
   purchase_info?: string;

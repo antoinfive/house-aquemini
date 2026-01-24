@@ -188,9 +188,47 @@
 
 ### Notes for next developer:
 - Collection page is functional but requires Supabase to be set up to work
-- VinylForm does not yet include cover art upload - needs ImageUpload component
 - The grid is responsive: 1 col mobile, 2 col sm, 3 col md, 4 col lg, 5 col xl
 - Delete confirmation modal prevents accidental deletions
 - Search debounces at 300ms to reduce API calls
 - Zustand store exports from src/lib/store/index.ts
 - useVinyls hook refetches when filters change
+
+## 2026-01-24 - Phase 4: Cover Art Upload Feature COMPLETE
+
+### What was done:
+- Created ImageUpload component (src/components/shared/ImageUpload.tsx):
+  - Drag-and-drop file upload with visual feedback
+  - Click to browse functionality
+  - Image preview with replace/remove actions
+  - File validation (type: JPG/PNG/WebP/AVIF, max 5MB)
+  - Upload to Supabase Storage with unique filename generation
+  - Loading spinner during upload
+  - Error display for validation and upload failures
+  - Fully accessible with keyboard navigation and ARIA labels
+  - Matches industrial design system (brass accents, steel surfaces)
+- Created shared components index (src/components/shared/index.ts)
+- Updated VinylFormData type to include cover_art_url field
+- Integrated ImageUpload into VinylForm:
+  - Added cover_art_url to form state
+  - New "Cover Art" section at top of form
+  - Uploads to 'vinyl-covers' bucket
+
+### Verification:
+- `pnpm typecheck` - PASSES
+- `pnpm test` - PASSES (3 tests)
+
+### Next steps (Phase 4 continued):
+1. Create Supabase Storage buckets manually (vinyl-covers, vinyl-photos, audio-clips)
+2. Test image upload end-to-end with real Supabase project
+3. Add FilterBar component for genre/year filtering
+4. Implement vinyl detail page (/collection/[id])
+5. Consider adding AudioUpload for audio clips
+
+### Notes for next developer:
+- ImageUpload uploads directly to Supabase Storage from the client
+- The 'vinyl-covers' bucket must be created in Supabase dashboard with public read policy
+- Use `ImageUpload` from '@/components/shared' for any image upload needs
+- Component handles its own upload state and error display
+- When editing a vinyl, the existing cover_art_url is shown as preview
+- Removing an image only clears the URL - it doesn't delete the file from storage (cleanup can be added later)

@@ -3,7 +3,7 @@
 ## Project Overview
 A sophisticated vinyl collection management system with a subtle Japanese listening room aesthetic. Features collection tracking, visual wishlist mood board, dual now-playing (manual + Spotify), and a beautiful public gallery for sharing your collection.
 
-**Current Status**: Phase 4 In Progress - Vinyl Collection CRUD. Collection page with full CRUD operations implemented. Owner can add, edit, and delete vinyls. VinylGrid, VinylCard, and VinylForm components complete. API routes for GET/POST/PATCH/DELETE working. Zustand store and useVinyls hook provide state management.
+**Current Status**: Phase 4 In Progress - Vinyl Collection CRUD. Collection page with full CRUD operations implemented. Owner can add, edit, and delete vinyls. VinylGrid, VinylCard, and VinylForm components complete. API routes for GET/POST/PATCH/DELETE working. Zustand store and useVinyls hook provide state management. **ImageUpload component added** - cover art can now be uploaded via drag-and-drop or click, with preview, replace, and remove functionality. Uploads go to Supabase Storage `vinyl-covers` bucket.
 
 ## Technology Stack
 - **Frontend**: Next.js 16 (App Router) with TypeScript
