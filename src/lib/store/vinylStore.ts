@@ -27,7 +27,7 @@ interface VinylState {
 
 export const useVinylStore = create<VinylState>((set, get) => ({
   vinyls: [],
-  isLoading: false,
+  isLoading: true,  // Start as true to prevent empty state flash
   error: null,
   filters: {},
 
