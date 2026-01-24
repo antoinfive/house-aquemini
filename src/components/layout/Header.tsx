@@ -1,18 +1,23 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { useVinylStore } from '@/lib/store';
 import { Button } from '@/components/ui';
 
 export function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const { user, isOwner, isLoading, signOut } = useAuth();
+  const resetVinylStore = useVinylStore((state) => state.reset);
 
   const isActive = (path: string) => pathname === path || pathname?.startsWith(path + '/');
 
   const handleSignOut = async () => {
     await signOut();
+    resetVinylStore();
+    router.push('/');
   };
 
   return (

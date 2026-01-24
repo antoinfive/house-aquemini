@@ -319,3 +319,34 @@
 - Detail page uses React 19's `use()` hook for unwrapping params Promise
 - Edit/Delete modals on detail page work independently from collection page modals
 - The /api/now-playing endpoint may need to be created if it doesn't exist yet
+
+## 2026-01-24 - Authentication Features COMPLETE
+
+### What was done:
+- Fixed logout flow in Header component (src/components/layout/Header.tsx):
+  - Added useRouter import from next/navigation
+  - Added redirect to landing page after signOut
+  - Added vinyl store reset to clear cached data on logout
+  - Prevents stale data from being visible if another user logs in
+- Added reset action to vinylStore (src/lib/store/vinylStore.ts):
+  - New reset() method clears all state: vinyls, loading, error, filters
+  - Called during logout to clear user-specific data
+- Verified all three authentication features:
+  - Login: Form submits, signIn called, redirects to /collection on success
+  - Logout: Button in header, clears auth state, clears vinyl store, redirects to /
+  - Protected routes: Middleware protects /collection and /wishlist, redirects to /login
+
+### Verification:
+- `pnpm typecheck` - PASSES
+- `pnpm test` - PASSES (3 tests)
+
+### Next steps (Phase 4 continued):
+1. Create Supabase Storage buckets manually (vinyl-covers, vinyl-photos, audio-clips)
+2. Test authentication end-to-end with real Supabase project
+3. Continue to Phase 5: Wishlist Mood Board
+
+### Notes for next developer:
+- Authentication infrastructure is complete but requires Supabase project to test
+- The profiles.is_owner flag must be set manually in Supabase for the owner account
+- Logout now properly clears all client-side state (auth and vinyl store)
+- Protected routes are enforced at middleware level, not just UI

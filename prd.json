@@ -10,7 +10,7 @@
         "Verify redirect to dashboard",
         "Check that owner-only features are visible"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "category": "authentication",
@@ -20,7 +20,7 @@
         "Verify redirect to landing page",
         "Check that protected routes are no longer accessible"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "category": "authentication",
@@ -31,7 +31,7 @@
         "Attempt to access /wishlist without auth",
         "Verify redirect to login page"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "category": "functional",

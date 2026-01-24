@@ -16,6 +16,7 @@ interface VinylState {
   setError: (error: string | null) => void;
   setFilters: (filters: Partial<VinylFilters>) => void;
   clearFilters: () => void;
+  reset: () => void;
 
   // Async actions
   fetchVinyls: () => Promise<void>;
@@ -46,6 +47,7 @@ export const useVinylStore = create<VinylState>((set, get) => ({
   setFilters: (filters) =>
     set((state) => ({ filters: { ...state.filters, ...filters } })),
   clearFilters: () => set({ filters: {} }),
+  reset: () => set({ vinyls: [], isLoading: false, error: null, filters: {} }),
 
   // Async actions
   fetchVinyls: async () => {
