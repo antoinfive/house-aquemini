@@ -350,3 +350,53 @@
 - The profiles.is_owner flag must be set manually in Supabase for the owner account
 - Logout now properly clears all client-side state (auth and vinyl store)
 - Protected routes are enforced at middleware level, not just UI
+
+## 2026-01-24 - Phase 5: Wishlist - Add Item Feature COMPLETE
+
+### What was done:
+- Created wishlist API routes (src/app/api/wishlist/):
+  - route.ts: GET with priority/tag filtering, POST for creating wishlist items
+  - [id]/route.ts: GET single item, PATCH for updates, DELETE for removal
+  - All routes check owner authentication and is_owner flag
+  - Items auto-assigned position for ordering (position = max + 1)
+- Created Zustand wishlist store (src/lib/store/wishlistStore.ts):
+  - Full state management for wishlist items
+  - Async actions for CRUD operations
+  - Position update support for reordering
+  - Filter state management (priority, tags)
+- Created useWishlist hook (src/lib/hooks/useWishlist.ts):
+  - Wraps store with convenient API
+  - Auto-fetches on mount and filter changes
+  - Provides priority and tag filtering methods
+- Created wishlist UI components (src/components/wishlist/):
+  - WishlistCard.tsx: Card with cover art, priority badge, tags, target price, hover overlay with quick actions
+  - WishlistGrid.tsx: Responsive grid with loading skeletons and empty state
+  - WishlistForm.tsx: Complete form with artist, album, cover art upload, priority selection, target price, tags (common + custom), and notes
+  - index.ts: Clean exports
+- Created Wishlist page (src/app/(dashboard)/wishlist/page.tsx):
+  - Full CRUD UI with add/edit/delete modals
+  - Priority filter buttons with item counts
+  - Toast notifications for actions
+  - Owner-only actions (add, edit, delete buttons)
+- Updated exports:
+  - src/lib/hooks/index.ts: Added useWishlist export
+  - src/lib/store/index.ts: Added useWishlistStore export
+
+### Verification:
+- `pnpm typecheck` - PASSES
+- `pnpm test` - PASSES (3 tests)
+
+### Next steps (Phase 5 continued):
+1. Create Supabase Storage bucket manually (wishlist-images)
+2. Test wishlist CRUD operations end-to-end with real Supabase project
+3. Implement drag-and-drop reordering with @dnd-kit
+4. Add tag filtering to wishlist page
+
+### Notes for next developer:
+- Wishlist page mirrors collection page patterns for consistency
+- WishlistCard shows priority badges: High (red), Medium (brass), Low (steel)
+- WishlistForm supports common tags + custom tags input
+- Position field exists for ordering - updatePositions() in store handles batch position updates
+- Filter by priority works, filter by tags method exists but UI not yet added
+- Cover art uploads go to 'wishlist-images' bucket (must be created in Supabase)
+- The wishlist store has reset() method to clear state on logout (not yet integrated)

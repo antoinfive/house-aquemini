@@ -178,7 +178,7 @@
         "Submit form",
         "Verify item appears in wishlist grid"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "category": "functional",
