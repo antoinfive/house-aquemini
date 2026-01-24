@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/client';
 import { Profile } from '@/lib/types';
@@ -28,7 +28,8 @@ export function useAuth(): UseAuthReturn {
     isOwner: false,
   });
 
-  const supabase = createClient();
+  // Memoize supabase client to prevent re-creation on every render
+  const supabase = useMemo(() => createClient(), []);
 
   // Fetch user profile from profiles table
   const fetchProfile = useCallback(async (userId: string): Promise<Profile | null> => {
@@ -48,12 +49,24 @@ export function useAuth(): UseAuthReturn {
 
   // Initialize auth state
   useEffect(() => {
-    const initializeAuth = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
+    let isMounted = true;
+    let initialLoadDone = false;
 
-        if (session?.user) {
+    const updateAuthState = async (session: Session | null) => {
+      if (!isMounted) return;
+
+      if (session?.user) {
+        // Set user immediately to show email faster
+        setState(prev => ({
+          ...prev,
+          user: session.user,
+          session,
+        }));
+
+        try {
           const profile = await fetchProfile(session.user.id);
+          if (!isMounted) return;
+
           setState({
             user: session.user,
             profile,
@@ -61,48 +74,58 @@ export function useAuth(): UseAuthReturn {
             isLoading: false,
             isOwner: profile?.is_owner ?? false,
           });
-        } else {
-          setState({
-            user: null,
-            profile: null,
-            session: null,
+        } catch (error) {
+          console.error('Error fetching profile:', error);
+          if (!isMounted) return;
+          // Still show user even if profile fetch fails
+          setState(prev => ({
+            ...prev,
             isLoading: false,
-            isOwner: false,
-          });
+          }));
         }
+      } else {
+        setState({
+          user: null,
+          profile: null,
+          session: null,
+          isLoading: false,
+          isOwner: false,
+        });
+      }
+    };
+
+    // Initial session check
+    const initializeAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        await updateAuthState(session);
+        initialLoadDone = true;
       } catch (error) {
         console.error('Error initializing auth:', error);
-        setState(prev => ({ ...prev, isLoading: false }));
+        if (isMounted) {
+          setState(prev => ({ ...prev, isLoading: false }));
+        }
+        initialLoadDone = true;
       }
     };
 
     initializeAuth();
 
-    // Listen for auth state changes
+    // Listen for auth state changes (skip initial event since we handle it above)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        if (session?.user) {
-          const profile = await fetchProfile(session.user.id);
-          setState({
-            user: session.user,
-            profile,
-            session,
-            isLoading: false,
-            isOwner: profile?.is_owner ?? false,
-          });
-        } else {
-          setState({
-            user: null,
-            profile: null,
-            session: null,
-            isLoading: false,
-            isOwner: false,
-          });
-        }
+        // Skip INITIAL_SESSION since we handle it with getSession()
+        if (event === 'INITIAL_SESSION') return;
+
+        // Wait for initial load to complete to avoid race conditions
+        if (!initialLoadDone) return;
+
+        await updateAuthState(session);
       }
     );
 
     return () => {
+      isMounted = false;
       subscription.unsubscribe();
     };
   }, [supabase, fetchProfile]);

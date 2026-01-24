@@ -3,34 +3,6 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="border-b border-wood-200 bg-wood-50/80 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-wood-500 flex items-center justify-center">
-                <span className="text-white font-bold text-sm">A</span>
-              </div>
-              <span className="font-semibold text-wood-800">Aces Library</span>
-            </div>
-            <nav className="flex items-center gap-6">
-              <Link
-                href="/gallery"
-                className="text-analog-600 hover:text-wood-600 transition-colors"
-              >
-                Gallery
-              </Link>
-              <Link
-                href="/login"
-                className="btn-vintage px-4 py-2 rounded-lg text-sm font-medium focus-ring"
-              >
-                Owner Login
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
-
       {/* Hero Section */}
       <main className="flex-1 flex flex-col items-center justify-center px-4 py-16">
         <div className="max-w-3xl mx-auto text-center">
