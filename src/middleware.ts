@@ -41,19 +41,6 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Protect dashboard routes - redirect to login if not authenticated
-  if (!user && request.nextUrl.pathname.startsWith('/collection')) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/login';
-    return NextResponse.redirect(url);
-  }
-
-  if (!user && request.nextUrl.pathname.startsWith('/wishlist')) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/login';
-    return NextResponse.redirect(url);
-  }
-
   // IMPORTANT: Return the supabaseResponse to ensure cookies are set
   return supabaseResponse;
 }

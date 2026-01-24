@@ -49,16 +49,12 @@ export function Header() {
               Gallery
             </NavLink>
 
-            {isOwner && (
-              <>
-                <NavLink href="/collection" isActive={isActive('/collection')}>
-                  Collection
-                </NavLink>
-                <NavLink href="/wishlist" isActive={isActive('/wishlist')}>
-                  Wishlist
-                </NavLink>
-              </>
-            )}
+            <NavLink href="/collection" isActive={isActive('/collection')}>
+              Collection
+            </NavLink>
+            <NavLink href="/wishlist" isActive={isActive('/wishlist')}>
+              Wishlist
+            </NavLink>
           </nav>
 
           {/* Auth section */}
@@ -79,13 +75,7 @@ export function Header() {
                   Sign Out
                 </Button>
               </div>
-            ) : (
-              <Link href="/login">
-                <Button variant="primary" size="sm">
-                  Sign In
-                </Button>
-              </Link>
-            )}
+            ) : null}
           </div>
 
           {/* Mobile menu button */}
