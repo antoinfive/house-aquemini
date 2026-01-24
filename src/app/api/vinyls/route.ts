@@ -101,9 +101,12 @@ export async function POST(request: NextRequest) {
       rpm: body.rpm || null,
       sleeve_condition: body.sleeve_condition || null,
       media_condition: body.media_condition || null,
+      cover_art_url: body.cover_art_url || null,
       genre: body.genre || [],
       notes: body.notes || null,
       purchase_info: body.purchase_info || null,
+      discogs_id: body.discogs_id || null,
+      tracklist: body.tracklist || null,
     })
     .select()
     .single();

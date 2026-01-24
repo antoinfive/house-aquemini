@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import { useAuth, useVinyls } from '@/lib/hooks';
 import { VinylGrid, VinylForm } from '@/components/collection';
+import { DiscogsSearchModal } from '@/components/discogs';
 import { Button, Input, Modal } from '@/components/ui';
 import type { Vinyl, VinylFormData } from '@/lib/types';
 import toast from 'react-hot-toast';
@@ -22,13 +23,28 @@ export default function CollectionPage() {
   } = useVinyls();
 
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isDiscogsModalOpen, setIsDiscogsModalOpen] = useState(false);
   const [editingVinyl, setEditingVinyl] = useState<Vinyl | null>(null);
+  const [discogsInitialData, setDiscogsInitialData] = useState<Partial<VinylFormData> | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<Vinyl | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleAddClick = () => {
     setEditingVinyl(null);
+    setDiscogsInitialData(null);
+    setIsDiscogsModalOpen(true);
+  };
+
+  const handleDiscogsSelect = (data: VinylFormData) => {
+    setDiscogsInitialData(data);
+    setIsDiscogsModalOpen(false);
+    setIsFormOpen(true);
+  };
+
+  const handleManualEntry = () => {
+    setDiscogsInitialData(null);
+    setIsDiscogsModalOpen(false);
     setIsFormOpen(true);
   };
 
@@ -191,22 +207,32 @@ export default function CollectionPage() {
         />
       </div>
 
+      {/* Discogs Search Modal */}
+      <DiscogsSearchModal
+        isOpen={isDiscogsModalOpen}
+        onClose={() => setIsDiscogsModalOpen(false)}
+        onSelect={handleDiscogsSelect}
+        onManualEntry={handleManualEntry}
+      />
+
       {/* Add/Edit Form Modal */}
       <Modal
         isOpen={isFormOpen}
         onClose={() => {
           setIsFormOpen(false);
           setEditingVinyl(null);
+          setDiscogsInitialData(null);
         }}
         title={editingVinyl ? 'Edit Vinyl' : 'Add New Vinyl'}
         size="xl"
       >
         <VinylForm
-          initialData={editingVinyl || undefined}
+          initialData={editingVinyl || discogsInitialData || undefined}
           onSubmit={handleFormSubmit}
           onCancel={() => {
             setIsFormOpen(false);
             setEditingVinyl(null);
+            setDiscogsInitialData(null);
           }}
           isLoading={isSubmitting}
         />

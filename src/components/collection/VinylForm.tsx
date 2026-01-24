@@ -3,6 +3,7 @@
 import { useState, FormEvent } from 'react';
 import { Button, Input } from '@/components/ui';
 import { ImageUpload } from '@/components/shared';
+import { TracklistDisplay } from './TracklistDisplay';
 import type { VinylFormData, Vinyl } from '@/lib/types';
 
 interface VinylFormProps {
@@ -61,6 +62,8 @@ export function VinylForm({ initialData, onSubmit, onCancel, isLoading = false }
     genre: initialData?.genre || [],
     notes: initialData?.notes || undefined,
     purchase_info: initialData?.purchase_info || undefined,
+    discogs_id: initialData?.discogs_id || undefined,
+    tracklist: initialData?.tracklist || undefined,
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -333,6 +336,19 @@ export function VinylForm({ initialData, onSubmit, onCancel, isLoading = false }
           </p>
         )}
       </div>
+
+      {/* Tracklist (read-only, from Discogs) */}
+      {formData.tracklist && formData.tracklist.length > 0 && (
+        <div className="space-y-4">
+          <h3 className="input-label">Tracklist</h3>
+          <TracklistDisplay tracklist={formData.tracklist} />
+          {formData.discogs_id && (
+            <p className="text-xs text-steel-500">
+              Imported from Discogs (ID: {formData.discogs_id})
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Notes */}
       <div className="space-y-4">

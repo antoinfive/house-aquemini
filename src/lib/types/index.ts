@@ -1,6 +1,13 @@
 // Database types - will be generated from Supabase later
 // For now, define the core interfaces
 
+// Track information from Discogs
+export interface Track {
+  position: string;
+  title: string;
+  duration: string;
+}
+
 export interface Profile {
   id: string;
   user_id: string;
@@ -30,6 +37,7 @@ export interface Vinyl {
   notes: string | null;
   purchase_info: string | null;
   discogs_id: string | null;
+  tracklist: Track[] | null;
   created_at: string;
   updated_at: string;
 }
@@ -102,6 +110,8 @@ export interface VinylFormData {
   genre: string[];
   notes?: string;
   purchase_info?: string;
+  discogs_id?: string;
+  tracklist?: Track[];
 }
 
 export interface WishlistFormData {

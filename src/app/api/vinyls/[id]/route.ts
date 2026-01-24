@@ -72,9 +72,12 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       ...(body.rpm !== undefined && { rpm: body.rpm }),
       ...(body.sleeve_condition !== undefined && { sleeve_condition: body.sleeve_condition }),
       ...(body.media_condition !== undefined && { media_condition: body.media_condition }),
+      ...(body.cover_art_url !== undefined && { cover_art_url: body.cover_art_url }),
       ...(body.genre !== undefined && { genre: body.genre }),
       ...(body.notes !== undefined && { notes: body.notes }),
       ...(body.purchase_info !== undefined && { purchase_info: body.purchase_info }),
+      ...(body.discogs_id !== undefined && { discogs_id: body.discogs_id }),
+      ...(body.tracklist !== undefined && { tracklist: body.tracklist }),
       updated_at: new Date().toISOString(),
     })
     .eq('id', id)

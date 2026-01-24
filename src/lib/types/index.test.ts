@@ -24,6 +24,7 @@ describe('Type definitions', () => {
       notes: 'Classic album',
       purchase_info: null,
       discogs_id: null,
+      tracklist: null,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
