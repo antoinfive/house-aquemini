@@ -10,6 +10,7 @@ interface WishlistGridProps {
   onItemClick?: (item: WishlistItem) => void;
   onEdit?: (item: WishlistItem) => void;
   onDelete?: (item: WishlistItem) => void;
+  onAddToCollection?: (item: WishlistItem) => void;
   emptyMessage?: string;
 }
 
@@ -36,6 +37,7 @@ export function WishlistGrid({
   onItemClick,
   onEdit,
   onDelete,
+  onAddToCollection,
   emptyMessage = 'No items in your wishlist yet.',
 }: WishlistGridProps) {
   if (isLoading) {
@@ -73,6 +75,7 @@ export function WishlistGrid({
           onClick={onItemClick}
           onEdit={onEdit}
           onDelete={onDelete}
+          onAddToCollection={onAddToCollection}
         />
       ))}
     </div>

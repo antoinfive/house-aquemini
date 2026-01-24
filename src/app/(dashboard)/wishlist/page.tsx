@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
-import { useAuth, useWishlist } from '@/lib/hooks';
+import { useState, useCallback } from 'react';
+import { useAuth, useWishlist, useVinyls } from '@/lib/hooks';
 import { WishlistGrid, WishlistForm } from '@/components/wishlist';
-import { Button, Modal } from '@/components/ui';
-import type { WishlistItem, WishlistFormData } from '@/lib/types';
+import { DiscogsSearchModal } from '@/components/discogs';
+import { Button, Input, Modal } from '@/components/ui';
+import type { WishlistItem, WishlistFormData, VinylFormData } from '@/lib/types';
 import toast from 'react-hot-toast';
 
 export default function WishlistPage() {
@@ -16,28 +17,59 @@ export default function WishlistPage() {
     addItem,
     updateItem,
     removeItem,
-    filterByPriority,
+    search,
     clearFilters,
-    filters,
   } = useWishlist();
+  const { addVinyl } = useVinyls();
 
+  const [isDiscogsModalOpen, setIsDiscogsModalOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [discogsInitialData, setDiscogsInitialData] = useState<Partial<WishlistFormData> | null>(null);
   const [editingItem, setEditingItem] = useState<WishlistItem | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<WishlistItem | null>(null);
+  const [addToCollectionConfirm, setAddToCollectionConfirm] = useState<WishlistItem | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleAddClick = () => {
     setEditingItem(null);
+    setDiscogsInitialData(null);
+    setIsDiscogsModalOpen(true);
+  };
+
+  const handleDiscogsSelect = (data: VinylFormData) => {
+    // Convert VinylFormData to WishlistFormData
+    const wishlistData: Partial<WishlistFormData> = {
+      artist: data.artist,
+      album: data.album,
+      year: data.year,
+      label: data.label,
+      cover_art_url: data.cover_art_url,
+      discogs_id: data.discogs_id,
+    };
+    setDiscogsInitialData(wishlistData);
+    setIsDiscogsModalOpen(false);
+    setIsFormOpen(true);
+  };
+
+  const handleManualEntry = () => {
+    setDiscogsInitialData(null);
+    setIsDiscogsModalOpen(false);
     setIsFormOpen(true);
   };
 
   const handleEditClick = (item: WishlistItem) => {
     setEditingItem(item);
+    setDiscogsInitialData(null);
     setIsFormOpen(true);
   };
 
   const handleDeleteClick = (item: WishlistItem) => {
     setDeleteConfirm(item);
+  };
+
+  const handleAddToCollectionClick = (item: WishlistItem) => {
+    setAddToCollectionConfirm(item);
   };
 
   const handleFormSubmit = async (data: WishlistFormData) => {
@@ -61,6 +93,7 @@ export default function WishlistPage() {
       toast.error('Something went wrong');
     } finally {
       setIsSubmitting(false);
+      setDiscogsInitialData(null);
     }
   };
 
@@ -81,24 +114,55 @@ export default function WishlistPage() {
     }
   };
 
-  const handlePriorityFilter = (priority: 'high' | 'medium' | 'low' | null) => {
-    if (priority === null) {
-      clearFilters();
-    } else {
-      filterByPriority(priority);
+  const handleAddToCollectionConfirm = async () => {
+    if (!addToCollectionConfirm) return;
+
+    setIsSubmitting(true);
+    try {
+      // Create vinyl from wishlist item
+      const vinylData: VinylFormData = {
+        artist: addToCollectionConfirm.artist,
+        album: addToCollectionConfirm.album,
+        year: addToCollectionConfirm.year || undefined,
+        label: addToCollectionConfirm.label || undefined,
+        cover_art_url: addToCollectionConfirm.cover_art_url || undefined,
+        discogs_id: addToCollectionConfirm.discogs_id || undefined,
+        genre: [],
+        notes: addToCollectionConfirm.notes || undefined,
+      };
+
+      const vinyl = await addVinyl(vinylData);
+      if (vinyl) {
+        // Auto-delete from wishlist on successful add to collection
+        await removeItem(addToCollectionConfirm.id);
+        toast.success('Added to collection and removed from wishlist');
+        setAddToCollectionConfirm(null);
+      }
+    } catch {
+      toast.error('Failed to add to collection');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const isLoading = authLoading || wishlistLoading;
-
-  // Count items by priority
-  const priorityCounts = items.reduce(
-    (acc, item) => {
-      acc[item.priority]++;
-      return acc;
+  const handleSearch = useCallback(
+    (value: string) => {
+      setSearchQuery(value);
+      // Debounce search
+      const timeoutId = setTimeout(() => {
+        search(value);
+      }, 300);
+      return () => clearTimeout(timeoutId);
     },
-    { high: 0, medium: 0, low: 0 }
+    [search]
   );
+
+  const handleClearSearch = () => {
+    setSearchQuery('');
+    clearFilters();
+  };
+
+  const isLoading = authLoading || wishlistLoading;
 
   return (
     <div className="min-h-screen">
@@ -134,48 +198,36 @@ export default function WishlistPage() {
             )}
           </div>
 
-          {/* Priority Filters */}
-          <div className="mt-6 flex flex-wrap gap-2">
-            <button
-              onClick={() => handlePriorityFilter(null)}
-              className={`px-3 py-1.5 rounded text-sm transition-colors ${
-                !filters.priority
-                  ? 'bg-brass-500 text-steel-900'
-                  : 'bg-steel-700 text-steel-300 hover:bg-steel-600'
-              }`}
-            >
-              All ({items.length})
-            </button>
-            <button
-              onClick={() => handlePriorityFilter('high')}
-              className={`px-3 py-1.5 rounded text-sm transition-colors ${
-                filters.priority === 'high'
-                  ? 'bg-red-500/30 text-red-400 border border-red-500/50'
-                  : 'bg-steel-700 text-steel-300 hover:bg-steel-600'
-              }`}
-            >
-              High ({priorityCounts.high})
-            </button>
-            <button
-              onClick={() => handlePriorityFilter('medium')}
-              className={`px-3 py-1.5 rounded text-sm transition-colors ${
-                filters.priority === 'medium'
-                  ? 'bg-brass-500/30 text-brass-400 border border-brass-500/50'
-                  : 'bg-steel-700 text-steel-300 hover:bg-steel-600'
-              }`}
-            >
-              Medium ({priorityCounts.medium})
-            </button>
-            <button
-              onClick={() => handlePriorityFilter('low')}
-              className={`px-3 py-1.5 rounded text-sm transition-colors ${
-                filters.priority === 'low'
-                  ? 'bg-steel-500/30 text-steel-400 border border-steel-500/50'
-                  : 'bg-steel-700 text-steel-300 hover:bg-steel-600'
-              }`}
-            >
-              Low ({priorityCounts.low})
-            </button>
+          {/* Search */}
+          <div className="mt-6 flex flex-col sm:flex-row gap-4">
+            <div className="flex-1 max-w-md">
+              <div className="relative">
+                <svg
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-steel-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+                <Input
+                  value={searchQuery}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  placeholder="Search by artist or album..."
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            {searchQuery && (
+              <Button variant="ghost" onClick={handleClearSearch}>
+                Clear Search
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -194,6 +246,7 @@ export default function WishlistPage() {
           isOwner={isOwner}
           onEdit={handleEditClick}
           onDelete={handleDeleteClick}
+          onAddToCollection={handleAddToCollectionClick}
           emptyMessage={
             isOwner
               ? 'Start building your wishlist by adding records you want to find.'
@@ -202,22 +255,32 @@ export default function WishlistPage() {
         />
       </div>
 
+      {/* Discogs Search Modal */}
+      <DiscogsSearchModal
+        isOpen={isDiscogsModalOpen}
+        onClose={() => setIsDiscogsModalOpen(false)}
+        onSelect={handleDiscogsSelect}
+        onManualEntry={handleManualEntry}
+      />
+
       {/* Add/Edit Form Modal */}
       <Modal
         isOpen={isFormOpen}
         onClose={() => {
           setIsFormOpen(false);
           setEditingItem(null);
+          setDiscogsInitialData(null);
         }}
         title={editingItem ? 'Edit Wishlist Item' : 'Add to Wishlist'}
         size="lg"
       >
         <WishlistForm
-          initialData={editingItem || undefined}
+          initialData={editingItem || discogsInitialData || undefined}
           onSubmit={handleFormSubmit}
           onCancel={() => {
             setIsFormOpen(false);
             setEditingItem(null);
+            setDiscogsInitialData(null);
           }}
           isLoading={isSubmitting}
         />
@@ -252,6 +315,42 @@ export default function WishlistPage() {
               className="bg-red-600 hover:bg-red-500 border-red-700"
             >
               Remove
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Add to Collection Confirmation Modal */}
+      <Modal
+        isOpen={!!addToCollectionConfirm}
+        onClose={() => setAddToCollectionConfirm(null)}
+        title="Add to Collection"
+        size="sm"
+      >
+        <div className="space-y-4">
+          <p className="text-steel-300">
+            Add{' '}
+            <span className="font-semibold text-steel-100">
+              {addToCollectionConfirm?.album}
+            </span>{' '}
+            by {addToCollectionConfirm?.artist} to your collection?
+          </p>
+          <p className="text-sm text-steel-400">
+            This will remove it from your wishlist.
+          </p>
+          <div className="flex justify-end gap-3">
+            <Button
+              variant="ghost"
+              onClick={() => setAddToCollectionConfirm(null)}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleAddToCollectionConfirm}
+              isLoading={isSubmitting}
+            >
+              Add to Collection
             </Button>
           </div>
         </div>

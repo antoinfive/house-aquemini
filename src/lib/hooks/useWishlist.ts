@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useWishlistStore } from '@/lib/store/wishlistStore';
 import type { WishlistFormData, WishlistItem } from '@/lib/types';
 
@@ -23,7 +23,7 @@ export function useWishlist() {
   // Fetch items on mount and when filters change
   useEffect(() => {
     fetchItems();
-  }, [fetchItems, filters.priority, filters.tags]);
+  }, [fetchItems, filters.search]);
 
   const addItem = async (data: WishlistFormData) => {
     return createItem(data);
@@ -41,13 +41,9 @@ export function useWishlist() {
     return updatePositions(items);
   };
 
-  const filterByPriority = (priority: 'high' | 'medium' | 'low' | undefined) => {
-    setFilters({ priority });
-  };
-
-  const filterByTags = (tags: string[]) => {
-    setFilters({ tags });
-  };
+  const search = useCallback((query: string) => {
+    setFilters({ search: query || undefined });
+  }, [setFilters]);
 
   return {
     items,
@@ -58,8 +54,7 @@ export function useWishlist() {
     updateItem,
     removeItem,
     reorderItems,
-    filterByPriority,
-    filterByTags,
+    search,
     clearFilters,
     reset,
   };

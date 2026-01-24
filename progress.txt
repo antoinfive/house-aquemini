@@ -400,3 +400,55 @@
 - Filter by priority works, filter by tags method exists but UI not yet added
 - Cover art uploads go to 'wishlist-images' bucket (must be created in Supabase)
 - The wishlist store has reset() method to clear state on logout (not yet integrated)
+
+## 2026-01-24 - Phase 5: Wishlist Simplification & Discogs Integration
+
+### What was done:
+- **Removed priority and tags from wishlist** for simpler UX:
+  - Updated WishlistItem type: removed priority, tags, category
+  - Updated WishlistFormData type: removed priority, tags, category
+  - Updated WishlistFilters type: simplified to just search
+  - Updated API routes to remove priority/tags handling
+  - Updated wishlist store to remove priority/tags filtering
+  - Updated useWishlist hook to use simple search instead
+  - Updated WishlistCard: removed priority badge and tags display
+  - Updated WishlistForm: removed priority selection and tags section
+  - Updated wishlist page: removed priority filter buttons
+- **Added Discogs integration** to wishlist (same flow as collection):
+  - Wishlist page now opens DiscogsSearchModal first when adding items
+  - User can search Discogs or choose manual entry
+  - Discogs data pre-fills the WishlistForm (artist, album, year, label, cover_art_url, discogs_id)
+- **Added "Add to Collection" feature**:
+  - WishlistCard has new "Add to Collection" button (+ icon)
+  - Clicking opens confirmation modal
+  - On confirm: creates vinyl from wishlist data, auto-deletes wishlist item
+  - Toast notification confirms "Added to collection and removed from wishlist"
+- **Consolidated storage bucket**:
+  - Changed WishlistForm to use 'vinyl-covers' bucket instead of 'wishlist-images'
+  - Both collection and wishlist now share the same storage bucket
+- **Added new fields to WishlistItem**:
+  - year: number | null
+  - label: string | null
+  - discogs_id: string | null
+- **Added search to wishlist page**:
+  - Search bar with debounce (300ms)
+  - Searches by artist or album name
+- Updated test file to match new WishlistItem type
+
+### Verification:
+- `pnpm typecheck` - PASSES
+- `pnpm test` - PASSES (3 tests)
+
+### Next steps (Phase 5 continued):
+1. Test wishlist CRUD and migration end-to-end with real Supabase project
+2. Implement drag-and-drop reordering with @dnd-kit
+3. Continue to Phase 6: Now Playing Feature
+
+### Notes for next developer:
+- Wishlist is now much simpler: just album info, target price, notes
+- Discogs flow is identical to collection page - search first, then form
+- Add to Collection auto-deletes from wishlist (user confirmed this is desired)
+- All cover art (collection + wishlist) uses 'vinyl-covers' bucket
+- No need to create 'wishlist-images' bucket anymore
+- WishlistFormData converts cleanly to VinylFormData for migration
+- Database schema may still have priority/tags columns - they're just not used

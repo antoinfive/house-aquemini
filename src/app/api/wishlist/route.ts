@@ -7,22 +7,16 @@ export async function GET(request: NextRequest) {
 
   // Parse query params for filtering
   const searchParams = request.nextUrl.searchParams;
-  const priority = searchParams.get('priority');
-  const tags = searchParams.getAll('tag');
+  const search = searchParams.get('search');
 
   let query = supabase
     .from('wishlist_items')
     .select('*')
     .order('position', { ascending: true });
 
-  // Apply priority filter
-  if (priority) {
-    query = query.eq('priority', priority);
-  }
-
-  // Apply tags filter (items with ANY of the selected tags)
-  if (tags.length > 0) {
-    query = query.overlaps('tags', tags);
+  // Apply search filter (artist or album)
+  if (search) {
+    query = query.or(`artist.ilike.%${search}%,album.ilike.%${search}%`);
   }
 
   const { data, error } = await query;
@@ -92,12 +86,12 @@ export async function POST(request: NextRequest) {
       owner_id: user.id,
       artist: body.artist,
       album: body.album,
+      year: body.year || null,
+      label: body.label || null,
       cover_art_url: body.cover_art_url || null,
-      priority: body.priority || 'medium',
       target_price: body.target_price || null,
       notes: body.notes || null,
-      tags: body.tags || [],
-      category: body.category || null,
+      discogs_id: body.discogs_id || null,
       position: nextPosition,
     })
     .select()

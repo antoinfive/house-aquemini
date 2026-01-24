@@ -60,10 +60,7 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
 
     try {
       const params = new URLSearchParams();
-      if (filters.priority) params.append('priority', filters.priority);
-      if (filters.tags?.length) {
-        filters.tags.forEach((t) => params.append('tag', t));
-      }
+      if (filters.search) params.append('search', filters.search);
 
       const response = await fetch(`/api/wishlist?${params.toString()}`);
       const result = await response.json();

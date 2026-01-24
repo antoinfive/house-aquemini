@@ -47,13 +47,13 @@ export interface WishlistItem {
   owner_id: string;
   artist: string;
   album: string;
+  year: number | null;
+  label: string | null;
   cover_art_url: string | null;
-  priority: 'high' | 'medium' | 'low';
   target_price: number | null;
   notes: string | null;
-  tags: string[];
   position: number;
-  category: string | null;
+  discogs_id: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -117,12 +117,12 @@ export interface VinylFormData {
 export interface WishlistFormData {
   artist: string;
   album: string;
+  year?: number;
+  label?: string;
   cover_art_url?: string;
-  priority: 'high' | 'medium' | 'low';
   target_price?: number;
   notes?: string;
-  tags: string[];
-  category?: string;
+  discogs_id?: string;
 }
 
 // Filter types
@@ -134,7 +134,5 @@ export interface VinylFilters {
 }
 
 export interface WishlistFilters {
-  priority?: 'high' | 'medium' | 'low';
-  tags?: string[];
-  category?: string;
+  search?: string;
 }

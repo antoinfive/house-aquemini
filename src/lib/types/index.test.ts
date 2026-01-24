@@ -39,19 +39,19 @@ describe('Type definitions', () => {
       owner_id: 'owner-1',
       artist: 'John Coltrane',
       album: 'A Love Supreme',
+      year: 1965,
+      label: 'Impulse!',
       cover_art_url: null,
-      priority: 'high',
       target_price: 150,
       notes: 'Looking for original pressing',
-      tags: ['Jazz', 'Spiritual'],
       position: 1,
-      category: 'Jazz',
+      discogs_id: null,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
 
-    expect(item.priority).toBe('high');
-    expect(item.tags).toHaveLength(2);
+    expect(item.artist).toBe('John Coltrane');
+    expect(item.year).toBe(1965);
   });
 
   it('should allow creating a valid NowPlaying object', () => {

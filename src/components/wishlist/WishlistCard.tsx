@@ -9,27 +9,17 @@ interface WishlistCardProps {
   isOwner?: boolean;
   onEdit?: (item: WishlistItem) => void;
   onDelete?: (item: WishlistItem) => void;
+  onAddToCollection?: (item: WishlistItem) => void;
   onClick?: (item: WishlistItem) => void;
   isDragging?: boolean;
 }
-
-const PRIORITY_STYLES = {
-  high: 'bg-red-500/20 text-red-400 border-red-500/50',
-  medium: 'bg-brass-500/20 text-brass-400 border-brass-500/50',
-  low: 'bg-steel-500/20 text-steel-400 border-steel-500/50',
-};
-
-const PRIORITY_LABELS = {
-  high: 'High',
-  medium: 'Medium',
-  low: 'Low',
-};
 
 export function WishlistCard({
   item,
   isOwner = false,
   onEdit,
   onDelete,
+  onAddToCollection,
   onClick,
   isDragging = false,
 }: WishlistCardProps) {
@@ -48,6 +38,11 @@ export function WishlistCard({
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     onDelete?.(item);
+  };
+
+  const handleAddToCollection = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onAddToCollection?.(item);
   };
 
   return (
@@ -93,15 +88,6 @@ export function WishlistCard({
           </div>
         )}
 
-        {/* Priority Badge */}
-        <div className="absolute top-2 left-2">
-          <span
-            className={`px-2 py-1 text-xs font-medium rounded border ${PRIORITY_STYLES[item.priority]}`}
-          >
-            {PRIORITY_LABELS[item.priority]}
-          </span>
-        </div>
-
         {/* Hover Overlay */}
         <div
           className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-opacity duration-200 ${
@@ -111,6 +97,7 @@ export function WishlistCard({
           <div className="absolute bottom-0 left-0 right-0 p-4">
             <h3 className="text-steel-100 font-semibold text-lg truncate">{item.album}</h3>
             <p className="text-steel-300 text-sm truncate">{item.artist}</p>
+            {item.year && <p className="text-steel-400 text-sm font-mono">{item.year}</p>}
             {item.target_price && (
               <p className="text-brass-400 text-sm font-mono mt-1">
                 Target: ${item.target_price}
@@ -121,6 +108,23 @@ export function WishlistCard({
           {/* Quick Actions (Owner only) */}
           {isOwner && (
             <div className="absolute top-3 right-3 flex gap-2">
+              {onAddToCollection && (
+                <button
+                  onClick={handleAddToCollection}
+                  className="p-2 bg-brass-500 hover:bg-brass-400 rounded-full text-steel-900 transition-colors"
+                  aria-label="Add to collection"
+                  title="Add to Collection"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
+                </button>
+              )}
               {onEdit && (
                 <button
                   onClick={handleEdit}
@@ -164,20 +168,8 @@ export function WishlistCard({
       <div className="p-3">
         <h3 className="font-medium text-steel-100 truncate">{item.album}</h3>
         <p className="text-sm text-steel-400 truncate">{item.artist}</p>
-        {item.tags && item.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-2">
-            {item.tags.slice(0, 2).map((tag) => (
-              <span
-                key={tag}
-                className="px-2 py-0.5 text-xs bg-steel-700 text-steel-300 rounded"
-              >
-                {tag}
-              </span>
-            ))}
-            {item.tags.length > 2 && (
-              <span className="px-2 py-0.5 text-steel-500 text-xs">+{item.tags.length - 2}</span>
-            )}
-          </div>
+        {item.year && (
+          <p className="text-sm text-steel-500 font-mono mt-1">{item.year}</p>
         )}
       </div>
     </div>

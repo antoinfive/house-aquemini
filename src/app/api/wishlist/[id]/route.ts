@@ -63,12 +63,12 @@ export async function PATCH(
   const updateData: Record<string, unknown> = {};
   if (body.artist !== undefined) updateData.artist = body.artist;
   if (body.album !== undefined) updateData.album = body.album;
+  if (body.year !== undefined) updateData.year = body.year || null;
+  if (body.label !== undefined) updateData.label = body.label || null;
   if (body.cover_art_url !== undefined) updateData.cover_art_url = body.cover_art_url || null;
-  if (body.priority !== undefined) updateData.priority = body.priority;
   if (body.target_price !== undefined) updateData.target_price = body.target_price || null;
   if (body.notes !== undefined) updateData.notes = body.notes || null;
-  if (body.tags !== undefined) updateData.tags = body.tags;
-  if (body.category !== undefined) updateData.category = body.category || null;
+  if (body.discogs_id !== undefined) updateData.discogs_id = body.discogs_id || null;
   if (body.position !== undefined) updateData.position = body.position;
 
   const { data, error } = await supabase
