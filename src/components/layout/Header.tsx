@@ -16,14 +16,14 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-wood-200 dark:border-analog-700">
+    <header className="header-industrial sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-full bg-wood-500 flex items-center justify-center group-hover:bg-wood-600 transition-colors">
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="w-8 h-8 rounded-full bg-steel-700 border border-steel-600 flex items-center justify-center group-hover:border-brass-400 transition-colors">
               <svg
-                className="w-5 h-5 text-white"
+                className="w-5 h-5 text-brass-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -33,7 +33,7 @@ export function Header() {
                 <circle cx="12" cy="12" r="3" strokeWidth="2" />
               </svg>
             </div>
-            <span className="font-semibold text-lg text-analog-800 dark:text-wood-100">
+            <span className="font-semibold text-lg text-steel-100 tracking-tight">
               Aces Library
             </span>
           </Link>
@@ -59,10 +59,10 @@ export function Header() {
           {/* Auth section */}
           <div className="flex items-center gap-3">
             {isLoading ? (
-              <div className="w-20 h-8 bg-wood-100 dark:bg-analog-700 rounded animate-pulse" />
+              <div className="w-20 h-8 bg-steel-700 rounded animate-pulse" />
             ) : user ? (
               <div className="flex items-center gap-3">
-                <span className="hidden sm:inline text-sm text-analog-600 dark:text-analog-400">
+                <span className="hidden sm:inline text-sm text-steel-400 font-mono">
                   {user.email}
                 </span>
                 <Button
@@ -76,7 +76,7 @@ export function Header() {
               </div>
             ) : (
               <Link href="/login">
-                <Button variant="vintage" size="sm">
+                <Button variant="primary" size="sm">
                   Sign In
                 </Button>
               </Link>
@@ -85,11 +85,11 @@ export function Header() {
 
           {/* Mobile menu button */}
           <button
-            className="md:hidden p-2 rounded-lg hover:bg-wood-100 dark:hover:bg-analog-700 focus-ring"
+            className="md:hidden p-2 rounded hover:bg-steel-700 focus-ring text-steel-400 hover:text-brass-400 transition-colors"
             aria-label="Open menu"
           >
             <svg
-              className="w-6 h-6 text-analog-600 dark:text-analog-400"
+              className="w-6 h-6"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -114,11 +114,11 @@ function NavLink({ href, isActive, children }: NavLinkProps) {
     <Link
       href={href}
       className={`
-        px-3 py-2 rounded-lg text-sm font-medium transition-colors focus-ring
+        px-3 py-2 rounded text-sm font-medium transition-colors focus-ring tracking-wide
         ${
           isActive
-            ? 'bg-wood-100 dark:bg-analog-700 text-wood-700 dark:text-wood-200'
-            : 'text-analog-600 dark:text-analog-400 hover:text-analog-800 dark:hover:text-wood-200 hover:bg-wood-50 dark:hover:bg-analog-800'
+            ? 'bg-steel-700 text-brass-400 border-b-2 border-brass-400'
+            : 'text-steel-400 hover:text-brass-400 hover:bg-steel-800'
         }
       `}
     >

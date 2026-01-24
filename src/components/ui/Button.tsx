@@ -3,25 +3,25 @@
 import { forwardRef, ButtonHTMLAttributes } from 'react';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'vintage' | 'ghost' | 'outline';
+  variant?: 'primary' | 'ghost' | 'outline';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className = '', variant = 'vintage', size = 'md', isLoading, children, disabled, ...props }, ref) => {
-    const baseStyles = 'inline-flex items-center justify-center font-medium transition-all focus-ring rounded-lg';
+  ({ className = '', variant = 'primary', size = 'md', isLoading, children, disabled, ...props }, ref) => {
+    const baseStyles = 'inline-flex items-center justify-center font-medium transition-all focus-ring rounded';
 
     const variants = {
-      vintage: 'btn-vintage',
-      ghost: 'bg-transparent hover:bg-wood-100 text-analog-700 dark:hover:bg-analog-800 dark:text-wood-200',
-      outline: 'border border-wood-300 bg-transparent hover:bg-wood-100 text-analog-700 dark:border-analog-600 dark:hover:bg-analog-800 dark:text-wood-200',
+      primary: 'btn-primary',
+      ghost: 'btn-ghost',
+      outline: 'btn-outline',
     };
 
     const sizes = {
-      sm: 'px-3 py-1.5 text-sm',
-      md: 'px-4 py-2 text-base',
-      lg: 'px-6 py-3 text-lg',
+      sm: 'px-3 py-1.5 text-xs',
+      md: 'px-4 py-2 text-sm',
+      lg: 'px-6 py-3 text-base',
     };
 
     return (

@@ -55,7 +55,7 @@ export function VinylCard({
       aria-label={`${vinyl.album} by ${vinyl.artist}`}
     >
       {/* Cover Art */}
-      <div className="relative aspect-square bg-wood-100 dark:bg-analog-800">
+      <div className="relative aspect-square bg-steel-900">
         {vinyl.cover_art_url && !imageError ? (
           <Image
             src={vinyl.cover_art_url}
@@ -68,7 +68,7 @@ export function VinylCard({
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
             <svg
-              className="w-16 h-16 text-wood-300 dark:text-analog-600"
+              className="w-16 h-16 text-steel-600"
               fill="currentColor"
               viewBox="0 0 24 24"
               aria-hidden="true"
@@ -82,14 +82,14 @@ export function VinylCard({
 
         {/* Hover Overlay */}
         <div
-          className={`absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent transition-opacity duration-200 ${
+          className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-opacity duration-200 ${
             isHovered ? 'opacity-100' : 'opacity-0'
           }`}
         >
           <div className="absolute bottom-0 left-0 right-0 p-4">
-            <h3 className="text-white font-semibold text-lg truncate">{vinyl.album}</h3>
-            <p className="text-white/80 text-sm truncate">{vinyl.artist}</p>
-            {vinyl.year && <p className="text-white/60 text-sm">{vinyl.year}</p>}
+            <h3 className="text-steel-100 font-semibold text-lg truncate">{vinyl.album}</h3>
+            <p className="text-steel-300 text-sm truncate">{vinyl.artist}</p>
+            {vinyl.year && <p className="text-steel-400 text-sm font-mono">{vinyl.year}</p>}
           </div>
 
           {/* Quick Actions (Owner only) */}
@@ -98,7 +98,7 @@ export function VinylCard({
               {onSetNowPlaying && (
                 <button
                   onClick={handleSetNowPlaying}
-                  className="p-2 bg-warm-500 hover:bg-warm-600 rounded-full text-white transition-colors"
+                  className="p-2 bg-brass-500 hover:bg-brass-400 rounded-full text-steel-900 transition-colors"
                   aria-label="Set as now playing"
                   title="Set as now playing"
                 >
@@ -114,7 +114,7 @@ export function VinylCard({
               {onEdit && (
                 <button
                   onClick={handleEdit}
-                  className="p-2 bg-wood-500 hover:bg-wood-600 rounded-full text-white transition-colors"
+                  className="p-2 bg-steel-600 hover:bg-steel-500 rounded-full text-steel-200 transition-colors"
                   aria-label="Edit vinyl"
                   title="Edit"
                 >
@@ -131,7 +131,7 @@ export function VinylCard({
               {onDelete && (
                 <button
                   onClick={handleDelete}
-                  className="p-2 bg-red-500 hover:bg-red-600 rounded-full text-white transition-colors"
+                  className="p-2 bg-red-600 hover:bg-red-500 rounded-full text-white transition-colors"
                   aria-label="Delete vinyl"
                   title="Delete"
                 >
@@ -152,20 +152,20 @@ export function VinylCard({
 
       {/* Card Info (always visible) */}
       <div className="p-3">
-        <h3 className="font-medium text-analog-800 dark:text-wood-100 truncate">{vinyl.album}</h3>
-        <p className="text-sm text-analog-500 dark:text-analog-400 truncate">{vinyl.artist}</p>
+        <h3 className="font-medium text-steel-100 truncate">{vinyl.album}</h3>
+        <p className="text-sm text-steel-400 truncate">{vinyl.artist}</p>
         {vinyl.genre && vinyl.genre.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-2">
             {vinyl.genre.slice(0, 2).map((g) => (
               <span
                 key={g}
-                className="px-2 py-0.5 bg-wood-100 dark:bg-analog-700 text-analog-600 dark:text-wood-300 text-xs rounded"
+                className="genre-tag px-2 py-0.5 rounded"
               >
                 {g}
               </span>
             ))}
             {vinyl.genre.length > 2 && (
-              <span className="px-2 py-0.5 text-analog-400 text-xs">+{vinyl.genre.length - 2}</span>
+              <span className="px-2 py-0.5 text-steel-500 text-xs">+{vinyl.genre.length - 2}</span>
             )}
           </div>
         )}

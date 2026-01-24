@@ -35,9 +35,9 @@ export default function LoginPage() {
       <Card className="w-full max-w-md" padding="lg">
         <CardHeader>
           <div className="text-center mb-2">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-wood-100 dark:bg-analog-700 mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-steel-700 border border-steel-600 mb-4">
               <svg
-                className="w-8 h-8 text-wood-600 dark:text-wood-300"
+                className="w-8 h-8 text-brass-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -49,7 +49,7 @@ export default function LoginPage() {
             </div>
           </div>
           <CardTitle className="text-center">Welcome Back</CardTitle>
-          <p className="text-center text-analog-500 dark:text-analog-400 mt-2">
+          <p className="text-center text-steel-400 mt-2">
             Sign in to manage your vinyl collection
           </p>
         </CardHeader>
@@ -58,7 +58,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
               <div
-                className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm"
+                className="p-3 rounded bg-red-900/30 border border-red-800 text-red-300 text-sm"
                 role="alert"
               >
                 {error}

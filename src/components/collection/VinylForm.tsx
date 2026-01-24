@@ -127,7 +127,7 @@ export function VinylForm({ initialData, onSubmit, onCancel, isLoading = false }
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Required Fields */}
       <div className="space-y-4">
-        <h3 className="text-sm font-medium text-analog-500 dark:text-analog-400 uppercase tracking-wide">
+        <h3 className="input-label">
           Basic Info
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -181,19 +181,19 @@ export function VinylForm({ initialData, onSubmit, onCancel, isLoading = false }
 
       {/* Format & Pressing */}
       <div className="space-y-4">
-        <h3 className="text-sm font-medium text-analog-500 dark:text-analog-400 uppercase tracking-wide">
+        <h3 className="input-label">
           Format & Pressing
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-analog-700 dark:text-wood-200 mb-1.5">
+            <label className="input-label block mb-2">
               Format
             </label>
             <select
               name="format"
               value={formData.format || ''}
               onChange={handleChange}
-              className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-analog-800 border border-wood-200 dark:border-analog-600 text-analog-800 dark:text-wood-100 focus-ring"
+              className="input-industrial w-full px-4 py-2.5 focus-ring"
             >
               <option value="">Select format</option>
               {FORMAT_OPTIONS.map((f) => (
@@ -204,14 +204,14 @@ export function VinylForm({ initialData, onSubmit, onCancel, isLoading = false }
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-analog-700 dark:text-wood-200 mb-1.5">
+            <label className="input-label block mb-2">
               RPM
             </label>
             <select
               name="rpm"
               value={formData.rpm || ''}
               onChange={handleNumberChange}
-              className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-analog-800 border border-wood-200 dark:border-analog-600 text-analog-800 dark:text-wood-100 focus-ring"
+              className="input-industrial w-full px-4 py-2.5 focus-ring"
             >
               <option value="">Select RPM</option>
               {RPM_OPTIONS.map((r) => (
@@ -240,19 +240,19 @@ export function VinylForm({ initialData, onSubmit, onCancel, isLoading = false }
 
       {/* Condition */}
       <div className="space-y-4">
-        <h3 className="text-sm font-medium text-analog-500 dark:text-analog-400 uppercase tracking-wide">
+        <h3 className="input-label">
           Condition
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-analog-700 dark:text-wood-200 mb-1.5">
+            <label className="input-label block mb-2">
               Media Condition
             </label>
             <select
               name="media_condition"
               value={formData.media_condition || ''}
               onChange={handleChange}
-              className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-analog-800 border border-wood-200 dark:border-analog-600 text-analog-800 dark:text-wood-100 focus-ring"
+              className="input-industrial w-full px-4 py-2.5 focus-ring"
             >
               <option value="">Select condition</option>
               {CONDITION_OPTIONS.map((c) => (
@@ -263,14 +263,14 @@ export function VinylForm({ initialData, onSubmit, onCancel, isLoading = false }
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-analog-700 dark:text-wood-200 mb-1.5">
+            <label className="input-label block mb-2">
               Sleeve Condition
             </label>
             <select
               name="sleeve_condition"
               value={formData.sleeve_condition || ''}
               onChange={handleChange}
-              className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-analog-800 border border-wood-200 dark:border-analog-600 text-analog-800 dark:text-wood-100 focus-ring"
+              className="input-industrial w-full px-4 py-2.5 focus-ring"
             >
               <option value="">Select condition</option>
               {CONDITION_OPTIONS.map((c) => (
@@ -285,7 +285,7 @@ export function VinylForm({ initialData, onSubmit, onCancel, isLoading = false }
 
       {/* Genres */}
       <div className="space-y-4">
-        <h3 className="text-sm font-medium text-analog-500 dark:text-analog-400 uppercase tracking-wide">
+        <h3 className="input-label">
           Genres
         </h3>
         <div className="flex flex-wrap gap-2">
@@ -294,10 +294,10 @@ export function VinylForm({ initialData, onSubmit, onCancel, isLoading = false }
               key={genre}
               type="button"
               onClick={() => handleGenreToggle(genre)}
-              className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
+              className={`px-3 py-1.5 rounded text-sm transition-colors ${
                 formData.genre.includes(genre)
-                  ? 'bg-warm-500 text-white'
-                  : 'bg-wood-100 dark:bg-analog-700 text-analog-600 dark:text-wood-300 hover:bg-wood-200 dark:hover:bg-analog-600'
+                  ? 'bg-brass-500 text-steel-900'
+                  : 'bg-steel-700 text-steel-300 hover:bg-steel-600 border border-steel-600'
               }`}
             >
               {genre}
@@ -305,7 +305,7 @@ export function VinylForm({ initialData, onSubmit, onCancel, isLoading = false }
           ))}
         </div>
         {formData.genre.length > 0 && (
-          <p className="text-sm text-analog-500">
+          <p className="text-sm text-steel-400">
             Selected: {formData.genre.join(', ')}
           </p>
         )}
@@ -313,11 +313,11 @@ export function VinylForm({ initialData, onSubmit, onCancel, isLoading = false }
 
       {/* Notes */}
       <div className="space-y-4">
-        <h3 className="text-sm font-medium text-analog-500 dark:text-analog-400 uppercase tracking-wide">
+        <h3 className="input-label">
           Additional Info
         </h3>
         <div>
-          <label className="block text-sm font-medium text-analog-700 dark:text-wood-200 mb-1.5">
+          <label className="input-label block mb-2">
             Notes
           </label>
           <textarea
@@ -325,7 +325,7 @@ export function VinylForm({ initialData, onSubmit, onCancel, isLoading = false }
             value={formData.notes || ''}
             onChange={handleChange}
             rows={3}
-            className="w-full px-4 py-2.5 rounded-lg bg-white dark:bg-analog-800 border border-wood-200 dark:border-analog-600 text-analog-800 dark:text-wood-100 placeholder:text-analog-400 dark:placeholder:text-analog-500 focus-ring resize-none"
+            className="input-industrial w-full px-4 py-2.5 focus-ring resize-none"
             placeholder="Any additional notes about this record..."
           />
         </div>
@@ -339,7 +339,7 @@ export function VinylForm({ initialData, onSubmit, onCancel, isLoading = false }
       </div>
 
       {/* Actions */}
-      <div className="flex justify-end gap-3 pt-4 border-t border-wood-200 dark:border-analog-700">
+      <div className="flex justify-end gap-3 pt-4 border-t border-steel-700">
         <Button type="button" variant="ghost" onClick={onCancel} disabled={isLoading}>
           Cancel
         </Button>

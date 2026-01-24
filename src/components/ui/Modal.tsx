@@ -56,7 +56,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
     <div
       ref={overlayRef}
       onClick={handleOverlayClick}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+      className="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby={title ? 'modal-title' : undefined}
@@ -64,23 +64,23 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
       <div
         ref={contentRef}
         tabIndex={-1}
-        className={`w-full ${sizes[size]} bg-card border border-card-border rounded-xl shadow-xl max-h-[90vh] overflow-y-auto`}
+        className={`modal-content w-full ${sizes[size]} max-h-[90vh] overflow-y-auto`}
       >
         {title && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-wood-200 dark:border-analog-700">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-steel-700">
             <h2
               id="modal-title"
-              className="text-xl font-semibold text-analog-800 dark:text-wood-100"
+              className="text-xl font-semibold text-steel-100"
             >
               {title}
             </h2>
             <button
               onClick={onClose}
-              className="p-1 hover:bg-wood-100 dark:hover:bg-analog-700 rounded-lg transition-colors"
+              className="p-1 hover:bg-steel-700 rounded transition-colors text-steel-400 hover:text-brass-400"
               aria-label="Close modal"
             >
               <svg
-                className="w-5 h-5 text-analog-500"
+                className="w-5 h-5"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"

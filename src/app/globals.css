@@ -1,54 +1,69 @@
 @import "tailwindcss";
 
-/* Japanese Listening Room Aesthetic Theme */
+/* Industrial Design System - "Precision Audio" */
 :root {
-  /* Wood tones - Primary palette */
-  --wood-50: #faf8f5;
-  --wood-100: #f2ede5;
-  --wood-200: #e5dbc9;
-  --wood-300: #d4c4a8;
-  --wood-400: #c5ad8a;
-  --wood-500: #b59a76;
-  --wood-600: #9a7f5d;
-  --wood-700: #7d6548;
-  --wood-800: #665339;
-  --wood-900: #54452f;
+  /* Brushed Steel - Primary surface colors */
+  --steel-50: #f8f9fa;
+  --steel-100: #e9ecef;
+  --steel-200: #dee2e6;
+  --steel-300: #ced4da;
+  --steel-400: #adb5bd;
+  --steel-500: #6c757d;
+  --steel-600: #495057;
+  --steel-700: #343a40;
+  --steel-800: #212529;
+  --steel-900: #16191c;
+  --steel-950: #0d0f11;
 
-  /* Warm accent */
-  --warm-50: #fff7f0;
-  --warm-100: #ffedd9;
-  --warm-200: #ffd9b3;
-  --warm-300: #ffbe80;
-  --warm-400: #ff9d57;
-  --warm-500: #ff7d2e;
-  --warm-600: #e65a0c;
-  --warm-700: #bf4509;
-  --warm-800: #99380d;
-  --warm-900: #7d310f;
+  /* Brass - Accent color (#dca411) */
+  --brass-50: #fef9e7;
+  --brass-100: #fcefbf;
+  --brass-200: #f9e08c;
+  --brass-300: #f5ce54;
+  --brass-400: #dca411;
+  --brass-500: #c4920f;
+  --brass-600: #a67a0d;
+  --brass-700: #7f5d0a;
+  --brass-800: #5c4408;
+  --brass-900: #3d2d05;
 
-  /* Analog equipment grays */
-  --analog-50: #f7f7f6;
-  --analog-100: #e8e8e5;
-  --analog-200: #d1d1cc;
-  --analog-300: #b5b5ad;
-  --analog-400: #95958a;
-  --analog-500: #6b6b5e;
-  --analog-600: #57574c;
-  --analog-700: #40403a;
-  --analog-800: #35352f;
-  --analog-900: #2d2d28;
+  /* Carbon - True neutral blacks */
+  --carbon-50: #f5f5f5;
+  --carbon-100: #e0e0e0;
+  --carbon-200: #b8b8b8;
+  --carbon-300: #8c8c8c;
+  --carbon-400: #666666;
+  --carbon-500: #4a4a4a;
+  --carbon-600: #333333;
+  --carbon-700: #252525;
+  --carbon-800: #1a1a1a;
+  --carbon-900: #0f0f0f;
 
-  /* Background and foreground */
-  --background: var(--wood-50);
-  --foreground: var(--analog-800);
+  /* Semantic colors - Dark-first design */
+  --background: var(--steel-950);
+  --background-elevated: var(--steel-900);
+  --foreground: var(--steel-100);
+  --foreground-muted: var(--steel-400);
 
-  /* Component colors */
-  --card-bg: #ffffff;
-  --card-border: var(--wood-200);
-  --muted: var(--analog-100);
-  --muted-foreground: var(--analog-500);
-  --accent: var(--warm-500);
-  --accent-foreground: #ffffff;
+  --card-bg: var(--steel-800);
+  --card-border: var(--steel-700);
+  --card-hover: var(--steel-700);
+
+  --accent: var(--brass-400);
+  --accent-hover: var(--brass-300);
+  --accent-foreground: var(--steel-900);
+
+  --destructive: #dc3545;
+  --success: #28a745;
+
+  /* Typography */
+  --font-sans: var(--font-dm-sans), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), 'SF Mono', monospace;
+
+  /* Letter spacing */
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.05em;
 }
 
 @theme inline {
@@ -56,66 +71,54 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  /* Wood palette */
-  --color-wood-50: var(--wood-50);
-  --color-wood-100: var(--wood-100);
-  --color-wood-200: var(--wood-200);
-  --color-wood-300: var(--wood-300);
-  --color-wood-400: var(--wood-400);
-  --color-wood-500: var(--wood-500);
-  --color-wood-600: var(--wood-600);
-  --color-wood-700: var(--wood-700);
-  --color-wood-800: var(--wood-800);
-  --color-wood-900: var(--wood-900);
+  /* Steel palette */
+  --color-steel-50: var(--steel-50);
+  --color-steel-100: var(--steel-100);
+  --color-steel-200: var(--steel-200);
+  --color-steel-300: var(--steel-300);
+  --color-steel-400: var(--steel-400);
+  --color-steel-500: var(--steel-500);
+  --color-steel-600: var(--steel-600);
+  --color-steel-700: var(--steel-700);
+  --color-steel-800: var(--steel-800);
+  --color-steel-900: var(--steel-900);
+  --color-steel-950: var(--steel-950);
 
-  /* Warm palette */
-  --color-warm-50: var(--warm-50);
-  --color-warm-100: var(--warm-100);
-  --color-warm-200: var(--warm-200);
-  --color-warm-300: var(--warm-300);
-  --color-warm-400: var(--warm-400);
-  --color-warm-500: var(--warm-500);
-  --color-warm-600: var(--warm-600);
-  --color-warm-700: var(--warm-700);
-  --color-warm-800: var(--warm-800);
-  --color-warm-900: var(--warm-900);
+  /* Brass palette */
+  --color-brass-50: var(--brass-50);
+  --color-brass-100: var(--brass-100);
+  --color-brass-200: var(--brass-200);
+  --color-brass-300: var(--brass-300);
+  --color-brass-400: var(--brass-400);
+  --color-brass-500: var(--brass-500);
+  --color-brass-600: var(--brass-600);
+  --color-brass-700: var(--brass-700);
+  --color-brass-800: var(--brass-800);
+  --color-brass-900: var(--brass-900);
 
-  /* Analog palette */
-  --color-analog-50: var(--analog-50);
-  --color-analog-100: var(--analog-100);
-  --color-analog-200: var(--analog-200);
-  --color-analog-300: var(--analog-300);
-  --color-analog-400: var(--analog-400);
-  --color-analog-500: var(--analog-500);
-  --color-analog-600: var(--analog-600);
-  --color-analog-700: var(--analog-700);
-  --color-analog-800: var(--analog-800);
-  --color-analog-900: var(--analog-900);
+  /* Carbon palette */
+  --color-carbon-50: var(--carbon-50);
+  --color-carbon-100: var(--carbon-100);
+  --color-carbon-200: var(--carbon-200);
+  --color-carbon-300: var(--carbon-300);
+  --color-carbon-400: var(--carbon-400);
+  --color-carbon-500: var(--carbon-500);
+  --color-carbon-600: var(--carbon-600);
+  --color-carbon-700: var(--carbon-700);
+  --color-carbon-800: var(--carbon-800);
+  --color-carbon-900: var(--carbon-900);
 
   /* Semantic colors */
   --color-card: var(--card-bg);
   --color-card-border: var(--card-border);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--steel-800);
+  --color-muted-foreground: var(--foreground-muted);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
 
   /* Typography */
-  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), monospace;
-  --font-serif: "Georgia", "Times New Roman", serif;
-}
-
-/* Dark mode - warmer, more intimate feel */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #1a1714;
-    --foreground: var(--wood-100);
-    --card-bg: #252119;
-    --card-border: var(--analog-700);
-    --muted: var(--analog-800);
-    --muted-foreground: var(--analog-400);
-  }
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
 body {
@@ -124,46 +127,173 @@ body {
   font-family: var(--font-sans);
 }
 
-/* Vintage button styles */
-.btn-vintage {
-  background: linear-gradient(180deg, var(--wood-400) 0%, var(--wood-600) 100%);
-  border: 1px solid var(--wood-700);
+/* Primary Button - Brass accent with metallic sheen */
+.btn-primary {
+  background: linear-gradient(180deg, var(--brass-400) 0%, var(--brass-500) 100%);
+  border: 1px solid var(--brass-600);
+  color: var(--steel-900);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    0 2px 4px rgba(0, 0, 0, 0.2);
-  color: white;
+    0 1px 2px rgba(0, 0, 0, 0.3);
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  font-size: 0.8125rem;
   transition: all 0.15s ease;
 }
 
-.btn-vintage:hover {
-  background: linear-gradient(180deg, var(--wood-500) 0%, var(--wood-700) 100%);
+.btn-primary:hover {
+  background: linear-gradient(180deg, var(--brass-300) 0%, var(--brass-400) 100%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    0 3px 6px rgba(0, 0, 0, 0.25);
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 2px 8px rgba(220, 164, 17, 0.3);
 }
 
-.btn-vintage:active {
-  background: linear-gradient(180deg, var(--wood-600) 0%, var(--wood-700) 100%);
+.btn-primary:active {
+  background: linear-gradient(180deg, var(--brass-500) 0%, var(--brass-600) 100%);
   box-shadow:
     inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Card styles with subtle shadow */
-.card-vinyl {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 0.5rem;
+/* Ghost Button - Subtle steel with brass hover */
+.btn-ghost {
+  background: transparent;
+  color: var(--steel-300);
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.btn-ghost:hover {
+  background: var(--steel-800);
+  border-color: var(--steel-600);
+  color: var(--brass-400);
+}
+
+/* Outline Button - Steel border with brass accent on hover */
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--steel-600);
+  color: var(--steel-200);
+  transition: all 0.15s ease;
+}
+
+.btn-outline:hover {
+  border-color: var(--brass-400);
+  color: var(--brass-400);
+  box-shadow: 0 0 0 1px var(--brass-400);
+}
+
+/* Industrial Input */
+.input-industrial {
+  background: var(--steel-900);
+  border: 1px solid var(--steel-700);
+  color: var(--steel-100);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.input-industrial:focus {
+  border-color: var(--brass-400);
   box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.05),
-    0 4px 12px rgba(0, 0, 0, 0.05);
+    inset 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 0 2px rgba(220, 164, 17, 0.2);
+  outline: none;
+}
+
+.input-industrial::placeholder {
+  color: var(--steel-500);
+}
+
+.input-label {
+  color: var(--steel-400);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
+/* Industrial Card - Steel panel with beveled edge */
+.card-industrial {
+  background: var(--steel-800);
+  border: 1px solid var(--steel-700);
+  border-radius: 6px;
+  box-shadow:
+    0 1px 0 var(--steel-600),
+    0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s ease;
+}
+
+.card-industrial:hover {
+  border-color: var(--steel-600);
+  box-shadow:
+    0 1px 0 var(--steel-500),
+    0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* Vinyl Card - Dark card with brass accent on hover */
+.card-vinyl {
+  background: var(--steel-800);
+  border: 1px solid var(--steel-700);
+  border-radius: 6px;
+  overflow: hidden;
   transition: all 0.2s ease;
 }
 
 .card-vinyl:hover {
-  box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.1),
-    0 8px 24px rgba(0, 0, 0, 0.08);
+  border-color: var(--brass-400);
   transform: translateY(-2px);
+  box-shadow:
+    0 0 0 1px var(--brass-400),
+    0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Industrial Header */
+.header-industrial {
+  background: linear-gradient(180deg, var(--steel-800) 0%, var(--steel-900) 100%);
+  border-bottom: 1px solid var(--steel-700);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Modal styles */
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background: var(--steel-800);
+  border: 1px solid var(--steel-600);
+  border-radius: 8px;
+  box-shadow:
+    0 0 0 1px var(--steel-700),
+    0 24px 48px rgba(0, 0, 0, 0.5);
+}
+
+/* Special Effects */
+.brushed-metal {
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.02) 2px,
+      rgba(255, 255, 255, 0.02) 4px
+    );
+}
+
+.brass-glow {
+  box-shadow: 0 0 20px rgba(220, 164, 17, 0.3);
+}
+
+.brass-glow-text {
+  text-shadow: 0 0 20px rgba(220, 164, 17, 0.5);
+}
+
+/* Focus Ring for Accessibility */
+.focus-ring:focus-visible {
+  outline: 2px solid var(--brass-400);
+  outline-offset: 2px;
 }
 
 /* Turntable rotation animation */
@@ -195,8 +325,12 @@ body {
   transform-origin: bottom;
 }
 
-/* Focus styles for accessibility */
-.focus-ring:focus-visible {
-  outline: 2px solid var(--warm-500);
-  outline-offset: 2px;
+/* Genre tag styling */
+.genre-tag {
+  background: var(--steel-700);
+  color: var(--steel-300);
+  border: 1px solid var(--steel-600);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }

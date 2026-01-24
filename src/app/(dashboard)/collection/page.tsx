@@ -104,14 +104,14 @@ export default function CollectionPage() {
   return (
     <div className="min-h-screen">
       {/* Page Header */}
-      <div className="bg-wood-100/50 dark:bg-analog-800/50 border-b border-wood-200 dark:border-analog-700">
+      <div className="bg-steel-900/50 border-b border-steel-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-analog-800 dark:text-wood-100">
+              <h1 className="text-3xl font-bold text-steel-100 tracking-tight">
                 My Collection
               </h1>
-              <p className="mt-1 text-analog-500 dark:text-analog-400">
+              <p className="mt-1 text-steel-400">
                 {vinyls.length} {vinyls.length === 1 ? 'record' : 'records'} in your collection
               </p>
             </div>
@@ -140,7 +140,7 @@ export default function CollectionPage() {
             <div className="flex-1 max-w-md">
               <div className="relative">
                 <svg
-                  className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-analog-400"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-steel-500"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -172,8 +172,8 @@ export default function CollectionPage() {
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {error && (
-          <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-            <p className="text-red-600 dark:text-red-400">{error}</p>
+          <div className="mb-6 p-4 bg-red-900/20 border border-red-800 rounded-lg">
+            <p className="text-red-400">{error}</p>
           </div>
         )}
 
@@ -220,9 +220,9 @@ export default function CollectionPage() {
         size="sm"
       >
         <div className="space-y-4">
-          <p className="text-analog-600 dark:text-analog-300">
+          <p className="text-steel-300">
             Are you sure you want to delete{' '}
-            <span className="font-semibold text-analog-800 dark:text-wood-100">
+            <span className="font-semibold text-steel-100">
               {deleteConfirm?.album}
             </span>{' '}
             by {deleteConfirm?.artist}? This action cannot be undone.
@@ -238,7 +238,7 @@ export default function CollectionPage() {
             <Button
               onClick={handleDeleteConfirm}
               isLoading={isSubmitting}
-              className="bg-red-500 hover:bg-red-600 border-red-600"
+              className="bg-red-600 hover:bg-red-500 border-red-700"
             >
               Delete
             </Button>

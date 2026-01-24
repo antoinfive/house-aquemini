@@ -9,7 +9,7 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 
 const Card = forwardRef<HTMLDivElement, CardProps>(
   ({ className = '', variant = 'default', padding = 'md', children, ...props }, ref) => {
-    const baseStyles = variant === 'vinyl' ? 'card-vinyl' : 'bg-card border border-card-border rounded-lg';
+    const baseStyles = variant === 'vinyl' ? 'card-vinyl' : 'card-industrial';
 
     const paddings = {
       none: '',
@@ -57,7 +57,7 @@ const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(
     return (
       <h3
         ref={ref}
-        className={`text-xl font-semibold text-analog-800 dark:text-wood-100 ${className}`}
+        className={`text-xl font-semibold text-steel-100 ${className}`}
         {...props}
       >
         {children}
