@@ -5,7 +5,30 @@
       "Bash(pnpm add:*)",
       "Bash(pnpm typecheck:*)",
       "Bash(pnpm test:*)",
-      "Bash(pnpm build:*)"
+      "Bash(pnpm build:*)",
+      "Bash(ls:*)",
+      "Bash(git -C /Users/antoin.campbell/Engineering/personal/aces-library log --oneline -10)",
+      "mcp__plugin_compound-engineering_context7__resolve-library-id",
+      "mcp__plugin_compound-engineering_context7__query-docs",
+      "Bash(done)",
+      "Bash(git -C /Users/antoin.campbell/Engineering/personal/aces-library log --oneline)",
+      "Bash(git -C /Users/antoin.campbell/Engineering/personal/aces-library show --stat 9ff8358)",
+      "Bash(git -C /Users/antoin.campbell/Engineering/personal/aces-library show --stat 8bdee9f)",
+      "Bash(pnpm exec tsx:*)",
+      "Bash(tree:*)",
+      "Bash(git add:*)",
+      "Bash(npm run build:*)",
+      "Bash(git commit:*)",
+      "Bash(curl:*)",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "mcp__plugin_playwright_playwright__browser_take_screenshot",
+      "mcp__plugin_playwright_playwright__browser_close",
+      "mcp__plugin_context7_context7__resolve-library-id",
+      "Bash(npm test:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npx eslint:*)",
+      "Bash(supabase db push:*)",
+      "Bash(npx supabase:*)"
     ]
   }
 }
