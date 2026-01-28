@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
@@ -7,6 +8,7 @@ import { useVinylStore } from '@/lib/store/vinylStore';
 import { Button } from '@/components/ui/Button';
 
 export function Header() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const { user, isOwner, isLoading, signOut } = useAuth();
@@ -77,7 +79,9 @@ export function Header() {
           {/* Mobile menu button */}
           <button
             className="md:hidden p-2 rounded hover:bg-steel-700 focus-ring text-steel-400 hover:text-brass-400 transition-colors"
-            aria-label="Open menu"
+            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isMobileMenuOpen}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             <svg
               className="w-6 h-6"
@@ -85,11 +89,55 @@ export function Header() {
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+              {isMobileMenuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+              )}
             </svg>
           </button>
         </div>
       </div>
+
+      {/* Mobile menu panel */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden border-t border-steel-700 bg-steel-800">
+          <nav className="px-4 py-3 space-y-1" aria-label="Mobile navigation">
+            <MobileNavLink
+              href="/collection"
+              isActive={isActive('/collection')}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Collection
+            </MobileNavLink>
+            <MobileNavLink
+              href="/wishlist"
+              isActive={isActive('/wishlist')}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Wishlist
+            </MobileNavLink>
+          </nav>
+          {user && (
+            <div className="px-4 py-3 border-t border-steel-700">
+              <span className="block text-sm text-steel-400 font-mono mb-2">
+                {user.email}
+              </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  handleSignOut();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full justify-center"
+              >
+                Sign Out
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
     </header>
   );
 }
@@ -110,6 +158,29 @@ function NavLink({ href, isActive, children }: NavLinkProps) {
           isActive
             ? 'bg-steel-700 text-brass-400 border-b-2 border-brass-400'
             : 'text-steel-400 hover:text-brass-400 hover:bg-steel-800'
+        }
+      `}
+    >
+      {children}
+    </Link>
+  );
+}
+
+interface MobileNavLinkProps extends NavLinkProps {
+  onClick: () => void;
+}
+
+function MobileNavLink({ href, isActive, onClick, children }: MobileNavLinkProps) {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className={`
+        block px-3 py-2 rounded text-base font-medium transition-colors focus-ring
+        ${
+          isActive
+            ? 'bg-steel-700 text-brass-400'
+            : 'text-steel-400 hover:text-brass-400 hover:bg-steel-700'
         }
       `}
     >
