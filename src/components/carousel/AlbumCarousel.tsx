@@ -1,12 +1,13 @@
 'use client';
 
-import { useCallback, useMemo, useState, useEffect } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import type { Vinyl } from '@/lib/types';
 import { useCarousel } from './useCarousel';
 import { CarouselItem } from './CarouselItem';
 import { CarouselControls } from './CarouselControls';
+import { useResponsiveConfig } from '@/lib/hooks/useResponsiveConfig';
 
 interface AlbumCarouselProps {
   vinyls: Vinyl[];
@@ -14,37 +15,6 @@ interface AlbumCarouselProps {
 }
 
 const DRAG_THRESHOLD = 50;
-
-interface ResponsiveConfig {
-  itemSize: number;
-  spacing: number;
-}
-
-function useResponsiveConfig(): ResponsiveConfig {
-  const [config, setConfig] = useState<ResponsiveConfig>({
-    itemSize: 280,
-    spacing: 300,
-  });
-
-  useEffect(() => {
-    function updateConfig() {
-      const width = window.innerWidth;
-      if (width < 640) {
-        setConfig({ itemSize: 200, spacing: 220 });
-      } else if (width < 1024) {
-        setConfig({ itemSize: 240, spacing: 260 });
-      } else {
-        setConfig({ itemSize: 280, spacing: 300 });
-      }
-    }
-
-    updateConfig();
-    window.addEventListener('resize', updateConfig);
-    return () => window.removeEventListener('resize', updateConfig);
-  }, []);
-
-  return config;
-}
 
 function LoadingSkeleton({ itemSize, spacing }: { itemSize: number; spacing: number }) {
   return (

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { useVinylStore } from '@/lib/store/vinylStore';
 import type { VinylFilters, VinylFormData } from '@/lib/types';
 
@@ -12,17 +13,32 @@ interface UseVinylsOptions {
 export function useVinyls(options: UseVinylsOptions = {}) {
   const { autoFetch = true, filters } = options;
 
-  const vinyls = useVinylStore((state) => state.vinyls);
-  const isLoading = useVinylStore((state) => state.isLoading);
-  const error = useVinylStore((state) => state.error);
-  const storeFilters = useVinylStore((state) => state.filters);
-
-  const fetchVinyls = useVinylStore((state) => state.fetchVinyls);
-  const createVinyl = useVinylStore((state) => state.createVinyl);
-  const editVinyl = useVinylStore((state) => state.editVinyl);
-  const deleteVinyl = useVinylStore((state) => state.deleteVinyl);
-  const setFilters = useVinylStore((state) => state.setFilters);
-  const clearFilters = useVinylStore((state) => state.clearFilters);
+  // Combine all selectors into a single shallow selector to reduce subscriptions
+  const {
+    vinyls,
+    isLoading,
+    error,
+    storeFilters,
+    fetchVinyls,
+    createVinyl,
+    editVinyl,
+    deleteVinyl,
+    setFilters,
+    clearFilters,
+  } = useVinylStore(
+    useShallow((state) => ({
+      vinyls: state.vinyls,
+      isLoading: state.isLoading,
+      error: state.error,
+      storeFilters: state.filters,
+      fetchVinyls: state.fetchVinyls,
+      createVinyl: state.createVinyl,
+      editVinyl: state.editVinyl,
+      deleteVinyl: state.deleteVinyl,
+      setFilters: state.setFilters,
+      clearFilters: state.clearFilters,
+    }))
+  );
 
   // Set initial filters if provided
   useEffect(() => {

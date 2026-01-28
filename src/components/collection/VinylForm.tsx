@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, useCallback, FormEvent } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { ImageUpload } from '@/components/shared';
@@ -95,14 +95,14 @@ export function VinylForm({ initialData, onSubmit, onCancel, isLoading = false }
     }));
   };
 
-  const handleGenreToggle = (genre: string) => {
+  const handleGenreToggle = useCallback((genre: string) => {
     setFormData((prev) => ({
       ...prev,
       genre: prev.genre.includes(genre)
         ? prev.genre.filter((g) => g !== genre)
         : [...prev.genre, genre],
     }));
-  };
+  }, []);
 
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
