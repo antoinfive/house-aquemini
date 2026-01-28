@@ -39,16 +39,12 @@ export function Header() {
               </svg>
             </div>
             <span className="font-semibold text-lg text-steel-100 tracking-tight">
-              Aces Library
+              House Aquemini
             </span>
           </Link>
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
-            <NavLink href="/gallery" isActive={isActive('/gallery')}>
-              Gallery
-            </NavLink>
-
             <NavLink href="/collection" isActive={isActive('/collection')}>
               Collection
             </NavLink>

@@ -334,3 +334,35 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
+
+/* Carousel Styles */
+.carousel-item-center {
+  box-shadow:
+    0 0 0 2px var(--brass-400),
+    0 20px 40px rgba(0, 0, 0, 0.5),
+    0 0 60px rgba(220, 164, 17, 0.2);
+}
+
+.carousel-item-side {
+  filter: brightness(0.65) saturate(0.85);
+}
+
+/* Responsive carousel item sizing */
+:root {
+  --carousel-item-size: 200px;
+  --carousel-spacing: 220px;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --carousel-item-size: 240px;
+    --carousel-spacing: 260px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --carousel-item-size: 280px;
+    --carousel-spacing: 300px;
+  }
+}
