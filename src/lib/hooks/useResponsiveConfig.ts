@@ -1,28 +1,33 @@
 'use client';
 
-import { useState, useEffect, useSyncExternalStore } from 'react';
+import { useSyncExternalStore } from 'react';
 
 interface ResponsiveConfig {
   itemSize: number;
   spacing: number;
 }
 
+// Cached configs to prevent object recreation and infinite loops
+const CONFIG_MOBILE: ResponsiveConfig = { itemSize: 200, spacing: 220 };
+const CONFIG_TABLET: ResponsiveConfig = { itemSize: 240, spacing: 260 };
+const CONFIG_DESKTOP: ResponsiveConfig = { itemSize: 280, spacing: 300 };
+
 // Shared state for responsive config to avoid duplicate resize listeners
-let currentConfig: ResponsiveConfig = { itemSize: 280, spacing: 300 };
+let currentConfig: ResponsiveConfig = CONFIG_DESKTOP;
 const listeners = new Set<() => void>();
 
 function calculateConfig(): ResponsiveConfig {
   if (typeof window === 'undefined') {
-    return { itemSize: 280, spacing: 300 };
+    return CONFIG_DESKTOP;
   }
 
   const width = window.innerWidth;
   if (width < 640) {
-    return { itemSize: 200, spacing: 220 };
+    return CONFIG_MOBILE;
   } else if (width < 1024) {
-    return { itemSize: 240, spacing: 260 };
+    return CONFIG_TABLET;
   }
-  return { itemSize: 280, spacing: 300 };
+  return CONFIG_DESKTOP;
 }
 
 function handleResize() {
@@ -49,7 +54,7 @@ function getSnapshot(): ResponsiveConfig {
 }
 
 function getServerSnapshot(): ResponsiveConfig {
-  return { itemSize: 280, spacing: 300 };
+  return CONFIG_DESKTOP;
 }
 
 /**
