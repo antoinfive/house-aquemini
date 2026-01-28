@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { VinylCard } from './VinylCard';
 import type { Vinyl } from '@/lib/types';
 
@@ -14,10 +15,14 @@ interface VinylGridProps {
   emptyMessage?: string;
 }
 
-function VinylGridSkeleton() {
+// Hoist static array outside component to avoid recreation on each render
+const SKELETON_INDICES = [0, 1, 2, 3, 4, 5, 6, 7];
+
+// Memoize skeleton as it has no props/state dependencies
+const VinylGridSkeleton = memo(function VinylGridSkeleton() {
   return (
     <>
-      {Array.from({ length: 8 }).map((_, i) => (
+      {SKELETON_INDICES.map((i) => (
         <div key={i} className="card-vinyl overflow-hidden animate-pulse">
           <div className="aspect-square bg-steel-700" />
           <div className="p-3 space-y-2">
@@ -28,7 +33,7 @@ function VinylGridSkeleton() {
       ))}
     </>
   );
-}
+});
 
 function EmptyState({ message }: { message: string }) {
   return (

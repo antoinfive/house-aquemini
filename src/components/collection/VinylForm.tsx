@@ -47,7 +47,8 @@ const FORMAT_OPTIONS = ['LP', '12"', '7"', '10"', '2xLP', '3xLP', 'Box Set'];
 const RPM_OPTIONS = [33, 45, 78];
 
 export function VinylForm({ initialData, onSubmit, onCancel, isLoading = false }: VinylFormProps) {
-  const [formData, setFormData] = useState<VinylFormData>({
+  // Use lazy state initialization to avoid recomputing on every render
+  const [formData, setFormData] = useState<VinylFormData>(() => ({
     artist: initialData?.artist || '',
     album: initialData?.album || '',
     year: initialData?.year || undefined,
@@ -65,7 +66,7 @@ export function VinylForm({ initialData, onSubmit, onCancel, isLoading = false }
     purchase_info: initialData?.purchase_info || undefined,
     discogs_id: initialData?.discogs_id || undefined,
     tracklist: initialData?.tracklist || undefined,
-  });
+  }));
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 

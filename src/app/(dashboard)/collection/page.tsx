@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useVinyls } from '@/lib/hooks/useVinyls';
@@ -38,6 +38,27 @@ export default function CollectionPage() {
   const [deleteConfirm, setDeleteConfirm] = useState<Vinyl | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Debounced search with proper cleanup
+  useEffect(() => {
+    // Clear any pending timeout
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    // Set new timeout for debounced search
+    searchTimeoutRef.current = setTimeout(() => {
+      search(searchQuery);
+    }, 300);
+
+    // Cleanup on unmount or when searchQuery changes
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [searchQuery]); // Only depend on searchQuery, not search
 
   const handleAddClick = () => {
     setEditingVinyl(null);
@@ -111,17 +132,9 @@ export default function CollectionPage() {
     }
   };
 
-  const handleSearch = useCallback(
-    (value: string) => {
-      setSearchQuery(value);
-      // Debounce search
-      const timeoutId = setTimeout(() => {
-        search(value);
-      }, 300);
-      return () => clearTimeout(timeoutId);
-    },
-    [search]
-  );
+  const handleSearch = (value: string) => {
+    setSearchQuery(value);
+  };
 
   const handleClearSearch = () => {
     setSearchQuery('');
