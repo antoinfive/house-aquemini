@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { Modal, Button } from '@/components/ui';
+import { Modal } from '@/components/ui/Modal';
+import { Button } from '@/components/ui/Button';
 import { DiscogsSearchInput } from './DiscogsSearchInput';
 import { DiscogsBarcodeInput } from './DiscogsBarcodeInput';
 import { DiscogsResultList } from './DiscogsResultList';
-import { useDiscogsSearch } from '@/lib/hooks';
+import { useDiscogsSearch } from '@/lib/hooks/useDiscogsSearch';
 import type { VinylFormData } from '@/lib/types';
 import type { SearchResultDisplay } from '@/lib/discogs/transform';
 

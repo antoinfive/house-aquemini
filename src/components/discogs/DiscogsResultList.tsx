@@ -1,7 +1,7 @@
 'use client';
 
 import { DiscogsResultCard } from './DiscogsResultCard';
-import { Button } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
 import type { SearchResultDisplay } from '@/lib/discogs/transform';
 
 interface DiscogsResultListProps {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Input } from '@/components/ui';
+import { Input } from '@/components/ui/Input';
 
 interface DiscogsSearchInputProps {
   onSearch: (query: string) => void;

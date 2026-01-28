@@ -1,10 +1,15 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { useAuth, useWishlist, useVinyls } from '@/lib/hooks';
-import { WishlistGrid, WishlistForm } from '@/components/wishlist';
-import { DiscogsSearchModal } from '@/components/discogs';
-import { Button, Input, Modal } from '@/components/ui';
+import { useAuth } from '@/lib/hooks/useAuth';
+import { useWishlist } from '@/lib/hooks/useWishlist';
+import { useVinyls } from '@/lib/hooks/useVinyls';
+import { WishlistGrid } from '@/components/wishlist/WishlistGrid';
+import { WishlistForm } from '@/components/wishlist/WishlistForm';
+import { DiscogsSearchModal } from '@/components/discogs/DiscogsSearchModal';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Modal } from '@/components/ui/Modal';
 import type { WishlistItem, WishlistFormData, VinylFormData } from '@/lib/types';
 import toast from 'react-hot-toast';
 

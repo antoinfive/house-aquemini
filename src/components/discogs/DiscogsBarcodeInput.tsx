@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Input, Button } from '@/components/ui';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
 
 interface DiscogsBarcodeInputProps {
   onSearch: (barcode: string) => void;

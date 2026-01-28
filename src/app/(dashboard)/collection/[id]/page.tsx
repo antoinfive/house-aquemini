@@ -2,9 +2,11 @@
 
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/lib/hooks';
-import { VinylDetail, VinylForm } from '@/components/collection';
-import { Button, Modal } from '@/components/ui';
+import { useAuth } from '@/lib/hooks/useAuth';
+import { VinylDetail } from '@/components/collection/VinylDetail';
+import { VinylForm } from '@/components/collection/VinylForm';
+import { Button } from '@/components/ui/Button';
+import { Modal } from '@/components/ui/Modal';
 import type { Vinyl, VinylFormData, ApiResponse } from '@/lib/types';
 import toast from 'react-hot-toast';
 

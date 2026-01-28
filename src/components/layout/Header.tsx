@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { useVinylStore } from '@/lib/store';
-import { Button } from '@/components/ui';
+import { useVinylStore } from '@/lib/store/vinylStore';
+import { Button } from '@/components/ui/Button';
 
 export function Header() {
   const pathname = usePathname();

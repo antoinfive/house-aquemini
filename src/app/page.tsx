@@ -1,7 +1,7 @@
 'use client';
 
-import { useVinyls } from '@/lib/hooks';
-import { AlbumCarousel } from '@/components/carousel';
+import { useVinyls } from '@/lib/hooks/useVinyls';
+import { AlbumCarousel } from '@/components/carousel/AlbumCarousel';
 import Link from 'next/link';
 
 export default function Home() {

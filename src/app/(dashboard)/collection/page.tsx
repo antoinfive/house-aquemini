@@ -2,10 +2,15 @@
 
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth, useVinyls } from '@/lib/hooks';
-import { VinylGrid, VinylForm, FilterBar } from '@/components/collection';
-import { DiscogsSearchModal } from '@/components/discogs';
-import { Button, Input, Modal } from '@/components/ui';
+import { useAuth } from '@/lib/hooks/useAuth';
+import { useVinyls } from '@/lib/hooks/useVinyls';
+import { VinylGrid } from '@/components/collection/VinylGrid';
+import { VinylForm } from '@/components/collection/VinylForm';
+import { FilterBar } from '@/components/collection/FilterBar';
+import { DiscogsSearchModal } from '@/components/discogs/DiscogsSearchModal';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Modal } from '@/components/ui/Modal';
 import type { Vinyl, VinylFormData } from '@/lib/types';
 import toast from 'react-hot-toast';
 

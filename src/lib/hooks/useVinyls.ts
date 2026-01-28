@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useVinylStore } from '@/lib/store';
+import { useVinylStore } from '@/lib/store/vinylStore';
 import type { VinylFilters, VinylFormData } from '@/lib/types';
 
 interface UseVinylsOptions {

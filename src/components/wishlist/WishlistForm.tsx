@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, FormEvent } from 'react';
-import { Button, Input } from '@/components/ui';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 import { ImageUpload } from '@/components/shared';
 import type { WishlistFormData, WishlistItem } from '@/lib/types';
 
