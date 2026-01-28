@@ -154,7 +154,7 @@ export function VinylCard({
       <div className="p-3">
         <h3 className="font-medium text-steel-100 truncate">{vinyl.album}</h3>
         <p className="text-sm text-steel-400 truncate">{vinyl.artist}</p>
-        {vinyl.genre && vinyl.genre.length > 0 && (
+        {vinyl.genre && vinyl.genre.length > 0 ? (
           <div className="flex flex-wrap gap-1 mt-2">
             {vinyl.genre.slice(0, 2).map((g) => (
               <span
@@ -164,11 +164,11 @@ export function VinylCard({
                 {g}
               </span>
             ))}
-            {vinyl.genre.length > 2 && (
+            {vinyl.genre.length > 2 ? (
               <span className="px-2 py-0.5 text-steel-500 text-xs">+{vinyl.genre.length - 2}</span>
-            )}
+            ) : null}
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );

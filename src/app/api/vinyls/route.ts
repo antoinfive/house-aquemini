@@ -50,8 +50,14 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
 
-  // Check authentication
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  // Fetch auth and profile in parallel to avoid waterfall
+  const [authResult, profileResult] = await Promise.all([
+    supabase.auth.getUser(),
+    // Start profile query - will filter by user_id after we have it
+    supabase.from('profiles').select('user_id, is_owner'),
+  ]);
+
+  const { data: { user }, error: authError } = authResult;
 
   if (authError || !user) {
     return NextResponse.json<ApiResponse<null>>(
@@ -60,12 +66,8 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Check if user is owner
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('is_owner')
-    .eq('user_id', user.id)
-    .single();
+  // Find the user's profile from the prefetched results
+  const profile = profileResult.data?.find((p) => p.user_id === user.id);
 
   if (!profile?.is_owner) {
     return NextResponse.json<ApiResponse<null>>(
