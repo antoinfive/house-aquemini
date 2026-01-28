@@ -42,6 +42,8 @@ export function useVinyls(options: UseVinylsOptions = {}) {
 
   // Track previous filters to avoid unnecessary updates from unstable object references
   const prevFiltersRef = useRef<string | null>(null);
+  // Track if initial fetch has been done to prevent duplicate fetches
+  const hasFetchedRef = useRef(false);
 
   // Set initial filters if provided - compare serialized values to handle object instability
   useEffect(() => {
@@ -54,19 +56,21 @@ export function useVinyls(options: UseVinylsOptions = {}) {
     }
   }, [filters, setFilters]);
 
-  // Fetch vinyls on mount if autoFetch is true
+  // Fetch vinyls on mount if autoFetch is true (only once)
   useEffect(() => {
-    if (autoFetch) {
+    if (autoFetch && !hasFetchedRef.current) {
+      hasFetchedRef.current = true;
       fetchVinyls();
     }
   }, [autoFetch, fetchVinyls]);
 
-  // Refetch when filters change
+  // Refetch when filters change (skip initial empty filters)
   useEffect(() => {
-    if (autoFetch && Object.keys(storeFilters).length > 0) {
+    // Only refetch if we've already done the initial fetch and filters have values
+    if (hasFetchedRef.current && Object.keys(storeFilters).length > 0) {
       fetchVinyls();
     }
-  }, [autoFetch, storeFilters, fetchVinyls]);
+  }, [storeFilters, fetchVinyls]);
 
   const refetch = () => fetchVinyls();
 
