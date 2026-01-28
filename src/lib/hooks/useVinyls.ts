@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useVinylStore } from '@/lib/store/vinylStore';
 import type { VinylFilters, VinylFormData } from '@/lib/types';
@@ -40,10 +40,17 @@ export function useVinyls(options: UseVinylsOptions = {}) {
     }))
   );
 
-  // Set initial filters if provided
+  // Track previous filters to avoid unnecessary updates from unstable object references
+  const prevFiltersRef = useRef<string | null>(null);
+
+  // Set initial filters if provided - compare serialized values to handle object instability
   useEffect(() => {
     if (filters) {
-      setFilters(filters);
+      const serialized = JSON.stringify(filters);
+      if (serialized !== prevFiltersRef.current) {
+        prevFiltersRef.current = serialized;
+        setFilters(filters);
+      }
     }
   }, [filters, setFilters]);
 
