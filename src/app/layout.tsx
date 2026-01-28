@@ -16,8 +16,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Aces Library - Vinyl Collection",
-  description: "A precision audio vinyl collection management system",
+  title: "House Aquemini",
+  description: "A personal vinyl collection",
 };
 
 export default function RootLayout({

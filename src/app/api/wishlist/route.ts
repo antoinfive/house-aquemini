@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
   let query = supabase
     .from('wishlist_items')
     .select('*')
-    .order('position', { ascending: true });
+    .order('artist', { ascending: true });
 
   // Apply search filter (artist or album)
   if (search) {

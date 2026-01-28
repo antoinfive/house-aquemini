@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   let query = supabase
     .from('vinyls')
     .select('*')
-    .order('created_at', { ascending: false });
+    .order('artist', { ascending: true });
 
   // Apply search filter (artist or album)
   if (search) {
