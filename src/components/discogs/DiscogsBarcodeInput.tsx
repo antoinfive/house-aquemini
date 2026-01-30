@@ -3,6 +3,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { Camera } from 'lucide-react';
+import { useMobileDetection } from '@/lib/hooks/useMobileDetection';
+import { BarcodeScanner } from './BarcodeScanner';
 
 interface DiscogsBarcodeInputProps {
   onSearch: (barcode: string) => void;
@@ -15,7 +18,9 @@ export function DiscogsBarcodeInput({
 }: DiscogsBarcodeInputProps) {
   const [value, setValue] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [isCameraMode, setIsCameraMode] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { isSupported } = useMobileDetection();
 
   // Focus on mount
   useEffect(() => {
@@ -53,44 +58,34 @@ export function DiscogsBarcodeInput({
     inputRef.current?.focus();
   };
 
+  const handleCameraScan = (barcode: string) => {
+    setValue(barcode);
+    setIsCameraMode(false);
+    setError(null);
+    // Auto-submit after successful scan
+    onSearch(barcode);
+  };
+
+  const handleScanError = (errorMessage: string) => {
+    setError(errorMessage);
+    setIsCameraMode(false);
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <div className="relative">
-          <div className="absolute left-3 top-1/2 -translate-y-1/2">
-            <svg
-              className="w-5 h-5 text-steel-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h2M4 12h2m10 0h2M4 12v8h2m6-8v8m6-8v8h2M4 4h16"
-              />
-            </svg>
-          </div>
-          <Input
-            ref={inputRef}
-            value={value}
-            onChange={handleChange}
-            placeholder="Enter UPC or EAN barcode..."
-            className="pl-10 pr-10"
-            maxLength={14}
-            inputMode="numeric"
-            pattern="[0-9]*"
-          />
-          {value && (
-            <button
-              type="button"
-              onClick={handleClear}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-steel-400 hover:text-steel-200 transition-colors"
-              aria-label="Clear barcode"
-            >
+    <>
+      {isCameraMode && (
+        <BarcodeScanner
+          onScan={handleCameraScan}
+          onError={handleScanError}
+          onClose={() => setIsCameraMode(false)}
+        />
+      )}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <div className="relative">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2">
               <svg
-                className="w-4 h-4"
+                className="w-5 h-5 text-steel-500"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -99,21 +94,65 @@ export function DiscogsBarcodeInput({
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
+                  d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h2M4 12h2m10 0h2M4 12v8h2m6-8v8m6-8v8h2M4 4h16"
                 />
               </svg>
-            </button>
-          )}
+            </div>
+            <Input
+              ref={inputRef}
+              value={value}
+              onChange={handleChange}
+              placeholder="Enter UPC or EAN barcode..."
+              className={`pl-10 ${value ? 'pr-10' : isSupported ? 'pr-10' : 'pr-3'}`}
+              maxLength={14}
+              inputMode="numeric"
+              pattern="[0-9]*"
+            />
+            {isSupported && !value && (
+              <button
+                type="button"
+                onClick={() => setIsCameraMode(true)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-brass-400 hover:text-brass-300 transition-colors"
+                aria-label="Scan barcode with camera"
+              >
+                <Camera className="w-5 h-5" />
+              </button>
+            )}
+            {value && (
+              <button
+                type="button"
+                onClick={handleClear}
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-steel-400 hover:text-steel-200 transition-colors"
+                aria-label="Clear barcode"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            )}
+          </div>
+          {error && <p className="mt-1 text-sm text-red-400">{error}</p>}
+          <p className="mt-1 text-xs text-steel-500">
+            {isSupported && !value
+              ? 'Enter barcode or tap camera icon to scan'
+              : 'Enter the barcode number from the vinyl sleeve or insert'}
+          </p>
         </div>
-        {error && <p className="mt-1 text-sm text-red-400">{error}</p>}
-        <p className="mt-1 text-xs text-steel-500">
-          Enter the barcode number from the vinyl sleeve or insert
-        </p>
-      </div>
 
-      <Button type="submit" isLoading={isLoading} disabled={!value.trim()}>
-        Search Barcode
-      </Button>
-    </form>
+        <Button type="submit" isLoading={isLoading} disabled={!value.trim()}>
+          Search Barcode
+        </Button>
+      </form>
+    </>
   );
 }
