@@ -34,12 +34,24 @@ export async function proxy(request: NextRequest) {
   );
 
   // IMPORTANT: Do not write code between createServerClient and
-  // supabase.auth.getUser(). A simple mistake could lead to
+  // supabase.auth.getSession(). A simple mistake could lead to
   // hard-to-debug auth issues.
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Use getSession() instead of getUser() to trigger session refresh
+  // This will automatically refresh the session if the access token is expired
+  // The new tokens are set via the setAll callback in the cookies config
+  const { error } = await supabase.auth.getSession();
+
+  // If there's an auth error (e.g., invalid refresh token), clear all Supabase cookies
+  // Supabase SSR uses cookies like sb-{project-ref}-auth-token and may chunk them
+  if (error) {
+    const allCookies = request.cookies.getAll();
+    allCookies.forEach((cookie) => {
+      if (cookie.name.startsWith('sb-')) {
+        supabaseResponse.cookies.delete(cookie.name);
+      }
+    });
+  }
 
   // IMPORTANT: Return the supabaseResponse to ensure cookies are set
   return supabaseResponse;
