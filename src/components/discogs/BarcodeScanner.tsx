@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { BrowserMultiFormatReader, IScannerControls } from '@zxing/browser';
 import { BarcodeFormat, DecodeHintType } from '@zxing/library';
 import { X } from 'lucide-react';
@@ -10,15 +10,68 @@ interface BarcodeScannerProps {
   onScan: (barcode: string) => void;
   onError: (error: string) => void;
   onClose: () => void;
+  continuous?: boolean;
+  addedCount?: number;
+  lastAddedLabel?: string | null;
 }
 
-export function BarcodeScanner({ onScan, onError, onClose }: BarcodeScannerProps) {
+export function BarcodeScanner({
+  onScan,
+  onError,
+  onClose,
+  continuous = false,
+  addedCount = 0,
+  lastAddedLabel = null,
+}: BarcodeScannerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const readerRef = useRef<BrowserMultiFormatReader | null>(null);
   const controlsRef = useRef<IScannerControls | null>(null);
+  const processingRef = useRef(false);
+  const recentBarcodesRef = useRef<Set<string>>(new Set());
   const [isScanning, setIsScanning] = useState(true);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const onScanRef = useRef(onScan);
+  onScanRef.current = onScan;
+  const onErrorRef = useRef(onError);
+  onErrorRef.current = onError;
+
+  const handleScanResult = useCallback(
+    (barcode: string, controls: IScannerControls) => {
+      if (continuous) {
+        // In continuous mode: gate on processing and dedup
+        if (processingRef.current) return;
+        if (recentBarcodesRef.current.has(barcode)) return;
+
+        processingRef.current = true;
+        recentBarcodesRef.current.add(barcode);
+
+        setIsSuccess(true);
+        onScanRef.current(barcode);
+
+        // Reset success animation after 1.5s
+        setTimeout(() => {
+          setIsSuccess(false);
+          processingRef.current = false;
+        }, 1500);
+
+        // Remove barcode from recent set after 5s
+        setTimeout(() => {
+          recentBarcodesRef.current.delete(barcode);
+        }, 5000);
+
+        // Do NOT stop the scanner
+      } else {
+        // Original single-scan behavior
+        controls.stop();
+        setIsSuccess(true);
+        setIsScanning(false);
+        setTimeout(() => onScanRef.current(barcode), 500);
+      }
+    },
+    [continuous]
+  );
 
   useEffect(() => {
     let mounted = true;
@@ -47,14 +100,11 @@ export function BarcodeScanner({ onScan, onError, onClose }: BarcodeScannerProps
             },
           },
           videoRef.current!,
-          (result, error, controls) => {
+          (result, _error, controls) => {
             if (!mounted) return;
             if (result) {
               const barcode = result.getText();
-              controls.stop();
-              setIsSuccess(true);
-              setIsScanning(false);
-              setTimeout(() => onScan(barcode), 500);
+              handleScanResult(barcode, controls);
             }
             // NotFoundException on frames without barcodes is normal — ignore
           }
@@ -79,7 +129,7 @@ export function BarcodeScanner({ onScan, onError, onClose }: BarcodeScannerProps
 
         setErrorMessage(message);
         setIsScanning(false);
-        onError(message);
+        onErrorRef.current(message);
       }
     };
 
@@ -92,7 +142,7 @@ export function BarcodeScanner({ onScan, onError, onClose }: BarcodeScannerProps
       }
       BrowserMultiFormatReader.releaseAllStreams();
     };
-  }, [onScan, onError]);
+  }, [handleScanResult]);
 
   // Handle escape key
   useEffect(() => {
@@ -126,7 +176,15 @@ export function BarcodeScanner({ onScan, onError, onClose }: BarcodeScannerProps
       />
 
       {/* Scan overlay with frame and instructions */}
-      {!errorMessage && <ScanOverlay isScanning={isScanning} isSuccess={isSuccess} />}
+      {!errorMessage && (
+        <ScanOverlay
+          isScanning={isScanning}
+          isSuccess={isSuccess}
+          continuous={continuous}
+          addedCount={addedCount}
+          lastAddedLabel={lastAddedLabel}
+        />
+      )}
 
       {/* Error message */}
       {errorMessage && (

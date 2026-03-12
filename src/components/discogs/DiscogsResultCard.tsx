@@ -1,21 +1,28 @@
 'use client';
 
 import Image from 'next/image';
+import { Plus, Check, Loader2 } from 'lucide-react';
 import type { SearchResultDisplay } from '@/lib/discogs/transform';
 
 interface DiscogsResultCardProps {
   result: SearchResultDisplay;
   onSelect: (result: SearchResultDisplay) => void;
   isSelecting?: boolean;
+  onQuickAdd?: (result: SearchResultDisplay) => void;
+  isQuickAdding?: boolean;
+  isQuickAdded?: boolean;
 }
 
 export function DiscogsResultCard({
   result,
   onSelect,
   isSelecting = false,
+  onQuickAdd,
+  isQuickAdding = false,
+  isQuickAdded = false,
 }: DiscogsResultCardProps) {
   const handleClick = () => {
-    if (!isSelecting) {
+    if (!isSelecting && !isQuickAdding) {
       onSelect(result);
     }
   };
@@ -24,6 +31,13 @@ export function DiscogsResultCard({
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       handleClick();
+    }
+  };
+
+  const handleQuickAdd = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onQuickAdd && !isQuickAdding && !isQuickAdded) {
+      onQuickAdd(result);
     }
   };
 
@@ -38,7 +52,7 @@ export function DiscogsResultCard({
         bg-steel-800/50 hover:bg-steel-700/50 hover:border-brass-600
         cursor-pointer transition-all duration-200
         focus:outline-none focus:ring-2 focus:ring-brass-500/50
-        ${isSelecting ? 'opacity-50 pointer-events-none' : ''}
+        ${isSelecting || isQuickAdding ? 'opacity-50 pointer-events-none' : ''}
       `}
     >
       {/* Cover thumbnail */}
@@ -103,6 +117,35 @@ export function DiscogsResultCard({
           </div>
         )}
       </div>
+
+      {/* Quick-add button */}
+      {onQuickAdd && (
+        <div className="flex-shrink-0 self-center">
+          <button
+            type="button"
+            onClick={handleQuickAdd}
+            disabled={isQuickAdding || isQuickAdded}
+            className={`
+              p-1.5 rounded-full transition-all duration-200
+              ${isQuickAdded
+                ? 'bg-green-500/20 text-green-400 cursor-default'
+                : isQuickAdding
+                  ? 'bg-steel-700 text-brass-400 cursor-wait'
+                  : 'bg-steel-700 hover:bg-brass-600 text-steel-300 hover:text-white'
+              }
+            `}
+            aria-label={isQuickAdded ? 'Added' : 'Quick add'}
+          >
+            {isQuickAdding ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : isQuickAdded ? (
+              <Check className="w-4 h-4" />
+            ) : (
+              <Plus className="w-4 h-4" />
+            )}
+          </button>
+        </div>
+      )}
 
       {/* Select indicator */}
       <div className="flex-shrink-0 self-center">

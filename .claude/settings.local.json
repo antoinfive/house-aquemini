@@ -28,7 +28,18 @@
       "Bash(npm run lint:*)",
       "Bash(npx eslint:*)",
       "Bash(supabase db push:*)",
-      "Bash(npx supabase:*)"
+      "Bash(npx supabase:*)",
+      "Bash(npx tsc:*)",
+      "Bash(vercel --version:*)",
+      "Bash(npm install:*)",
+      "Bash(vercel link:*)",
+      "Bash(vercel env ls:*)",
+      "Bash(find:*)",
+      "WebSearch",
+      "Bash(pnpm run build:*)",
+      "Bash(pnpm run dev)",
+      "Bash(ngrok http:*)",
+      "mcp__plugin_playwright_playwright__browser_resize"
     ]
   }
 }

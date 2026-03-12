@@ -72,6 +72,15 @@ export default function CollectionPage() {
     setIsFormOpen(true);
   };
 
+  const handleQuickAdd = async (data: VinylFormData): Promise<boolean> => {
+    try {
+      const result = await addVinyl(data);
+      return !!result;
+    } catch {
+      return false;
+    }
+  };
+
   const handleManualEntry = () => {
     setDiscogsInitialData(null);
     setIsDiscogsModalOpen(false);
@@ -153,7 +162,7 @@ export default function CollectionPage() {
       {/* Page Header */}
       <div className="bg-steel-900/50 border-b border-steel-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className={`flex flex-col sm:flex-row sm:items-center gap-4 ${isOwner ? 'sm:justify-between' : 'sm:justify-center text-center'}`}>
             <div>
               <h1 className="text-3xl font-bold text-steel-100 tracking-tight">
                 Collection
@@ -183,8 +192,8 @@ export default function CollectionPage() {
           </div>
 
           {/* Search */}
-          <div className="mt-6 flex flex-col sm:flex-row gap-4">
-            <div className="flex-1 max-w-md">
+          <div className={`mt-6 flex flex-col sm:flex-row gap-4 ${!isOwner ? 'justify-center' : ''}`}>
+            <div className={`flex-1 ${isOwner ? 'max-w-md' : 'max-w-lg'}`}>
               <div className="relative">
                 <svg
                   className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-steel-500"
@@ -255,6 +264,7 @@ export default function CollectionPage() {
         onClose={() => setIsDiscogsModalOpen(false)}
         onSelect={handleDiscogsSelect}
         onManualEntry={handleManualEntry}
+        onQuickAdd={handleQuickAdd}
       />
 
       {/* Add/Edit Form Modal */}

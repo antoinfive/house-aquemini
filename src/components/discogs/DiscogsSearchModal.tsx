@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { DiscogsSearchInput } from './DiscogsSearchInput';
@@ -9,12 +9,14 @@ import { DiscogsResultList } from './DiscogsResultList';
 import { useDiscogsSearch } from '@/lib/hooks/useDiscogsSearch';
 import type { VinylFormData } from '@/lib/types';
 import type { SearchResultDisplay } from '@/lib/discogs/transform';
+import toast from 'react-hot-toast';
 
 interface DiscogsSearchModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelect: (data: VinylFormData) => void;
   onManualEntry: () => void;
+  onQuickAdd?: (data: VinylFormData) => Promise<boolean>;
 }
 
 type TabType = 'search' | 'barcode';
@@ -24,9 +26,12 @@ export function DiscogsSearchModal({
   onClose,
   onSelect,
   onManualEntry,
+  onQuickAdd,
 }: DiscogsSearchModalProps) {
   const [activeTab, setActiveTab] = useState<TabType>('search');
   const [selectingId, setSelectingId] = useState<number | null>(null);
+  const [quickAddingId, setQuickAddingId] = useState<number | null>(null);
+  const [quickAddedIds, setQuickAddedIds] = useState<Set<number>>(new Set());
 
   const {
     results,
@@ -81,12 +86,110 @@ export function DiscogsSearchModal({
     }
   };
 
+  const handleQuickAdd = useCallback(
+    async (result: SearchResultDisplay) => {
+      if (!onQuickAdd) return;
+
+      setQuickAddingId(result.id);
+
+      try {
+        const releaseData = await selectRelease(result.id);
+
+        if (!releaseData) {
+          toast.error('Failed to fetch release details');
+          return;
+        }
+
+        let finalCoverUrl: string | undefined;
+
+        if (releaseData.coverImageUrl) {
+          const proxiedUrl = await proxyImage(
+            releaseData.coverImageUrl,
+            releaseData.vinyl.discogs_id
+          );
+          if (proxiedUrl) {
+            finalCoverUrl = proxiedUrl;
+          }
+        }
+
+        const vinylData: VinylFormData = {
+          ...releaseData.vinyl,
+          cover_art_url: finalCoverUrl,
+        };
+
+        const success = await onQuickAdd(vinylData);
+
+        if (success) {
+          setQuickAddedIds((prev) => new Set(prev).add(result.id));
+          toast.success(`Added ${result.artist} - ${result.album}`);
+        } else {
+          toast.error('Failed to add record');
+        }
+      } catch {
+        toast.error('Failed to quick-add record');
+      } finally {
+        setQuickAddingId(null);
+      }
+    },
+    [onQuickAdd, selectRelease, proxyImage]
+  );
+
+  const handleBatchScan = useCallback(
+    async (barcode: string): Promise<{ success: boolean; label: string } | null> => {
+      if (!onQuickAdd) return null;
+
+      try {
+        // Search Discogs by barcode
+        const response = await fetch(
+          `/api/discogs/barcode?barcode=${encodeURIComponent(barcode)}`
+        );
+        const data = await response.json();
+
+        if (data.error || !data.data?.results?.length) {
+          return null;
+        }
+
+        const firstResult = data.data.results[0];
+
+        // Fetch full release details
+        const releaseData = await selectRelease(firstResult.id);
+        if (!releaseData) return null;
+
+        let finalCoverUrl: string | undefined;
+        if (releaseData.coverImageUrl) {
+          const proxiedUrl = await proxyImage(
+            releaseData.coverImageUrl,
+            releaseData.vinyl.discogs_id
+          );
+          if (proxiedUrl) finalCoverUrl = proxiedUrl;
+        }
+
+        const vinylData: VinylFormData = {
+          ...releaseData.vinyl,
+          cover_art_url: finalCoverUrl,
+        };
+
+        const success = await onQuickAdd(vinylData);
+        const label = `${releaseData.vinyl.artist} - ${releaseData.vinyl.album}`;
+
+        if (success) {
+          return { success: true, label };
+        }
+        return null;
+      } catch {
+        return null;
+      }
+    },
+    [onQuickAdd, selectRelease, proxyImage]
+  );
+
   const handleManualClick = () => {
     onManualEntry();
   };
 
   const handleClose = () => {
     clearResults();
+    setQuickAddedIds(new Set());
     onClose();
   };
 
@@ -167,7 +270,12 @@ export function DiscogsSearchModal({
           {activeTab === 'search' ? (
             <DiscogsSearchInput onSearch={search} isLoading={isLoading} />
           ) : (
-            <DiscogsBarcodeInput onSearch={searchByBarcode} isLoading={isLoading} />
+            <DiscogsBarcodeInput
+              onSearch={searchByBarcode}
+              isLoading={isLoading}
+              onBatchScan={onQuickAdd ? handleBatchScan : undefined}
+              batchMode={!!onQuickAdd}
+            />
           )}
         </div>
 
@@ -180,6 +288,9 @@ export function DiscogsSearchModal({
           onSelect={handleResultSelect}
           onLoadMore={loadMore}
           selectingId={selectingId}
+          onQuickAdd={onQuickAdd ? handleQuickAdd : undefined}
+          quickAddingId={quickAddingId}
+          quickAddedIds={quickAddedIds}
           emptyMessage={
             activeTab === 'search'
               ? 'Search for an album or artist to find releases on Discogs.'

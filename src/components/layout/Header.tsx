@@ -25,9 +25,9 @@ export function Header() {
   return (
     <header className="header-industrial sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
+          <Link href="/" className="flex-1 flex items-center gap-3 group">
             <div className="w-8 h-8 rounded-full bg-steel-700 border border-steel-600 flex items-center justify-center group-hover:border-brass-400 transition-colors">
               <svg
                 className="w-5 h-5 text-brass-400"
@@ -56,7 +56,7 @@ export function Header() {
           </nav>
 
           {/* Auth section */}
-          <div className="flex items-center gap-3">
+          <div className="flex-1 flex items-center justify-end gap-3">
             {isLoading ? (
               <div className="w-20 h-8 bg-steel-700 rounded animate-pulse" />
             ) : user ? (

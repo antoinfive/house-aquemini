@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Camera } from 'lucide-react';
@@ -10,16 +10,23 @@ import { BarcodeScanner } from './BarcodeScanner';
 interface DiscogsBarcodeInputProps {
   onSearch: (barcode: string) => void;
   isLoading?: boolean;
+  onBatchScan?: (barcode: string) => Promise<{ success: boolean; label: string } | null>;
+  batchMode?: boolean;
 }
 
 export function DiscogsBarcodeInput({
   onSearch,
   isLoading = false,
+  onBatchScan,
+  batchMode = false,
 }: DiscogsBarcodeInputProps) {
   const [value, setValue] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isCameraMode, setIsCameraMode] = useState(false);
+  const [addedCount, setAddedCount] = useState(0);
+  const [lastAddedLabel, setLastAddedLabel] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const labelTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { isSupported } = useMobileDetection();
 
   // Focus on mount
@@ -27,6 +34,13 @@ export function DiscogsBarcodeInput({
     if (inputRef.current) {
       inputRef.current.focus();
     }
+  }, []);
+
+  // Cleanup label timeout
+  useEffect(() => {
+    return () => {
+      if (labelTimeoutRef.current) clearTimeout(labelTimeoutRef.current);
+    };
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,17 +72,48 @@ export function DiscogsBarcodeInput({
     inputRef.current?.focus();
   };
 
-  const handleCameraScan = (barcode: string) => {
-    setValue(barcode);
-    setIsCameraMode(false);
-    setError(null);
-    // Auto-submit after successful scan
-    onSearch(barcode);
-  };
+  const handleCameraScan = useCallback(
+    (barcode: string) => {
+      if (batchMode && onBatchScan) {
+        // In batch mode: call onBatchScan, don't close camera
+        onBatchScan(barcode).then((result) => {
+          if (result?.success) {
+            setAddedCount((prev) => prev + 1);
+            setLastAddedLabel(result.label);
+            // Clear label after 2s
+            if (labelTimeoutRef.current) clearTimeout(labelTimeoutRef.current);
+            labelTimeoutRef.current = setTimeout(() => {
+              setLastAddedLabel(null);
+            }, 2000);
+          } else {
+            // Show "Not found" briefly
+            setLastAddedLabel('Not found on Discogs');
+            if (labelTimeoutRef.current) clearTimeout(labelTimeoutRef.current);
+            labelTimeoutRef.current = setTimeout(() => {
+              setLastAddedLabel(null);
+            }, 2000);
+          }
+        });
+      } else {
+        // Single scan mode: original behavior
+        setValue(barcode);
+        setIsCameraMode(false);
+        setError(null);
+        onSearch(barcode);
+      }
+    },
+    [batchMode, onBatchScan, onSearch]
+  );
 
   const handleScanError = (errorMessage: string) => {
     setError(errorMessage);
     setIsCameraMode(false);
+  };
+
+  const handleCloseCamera = () => {
+    setIsCameraMode(false);
+    setAddedCount(0);
+    setLastAddedLabel(null);
   };
 
   return (
@@ -77,7 +122,10 @@ export function DiscogsBarcodeInput({
         <BarcodeScanner
           onScan={handleCameraScan}
           onError={handleScanError}
-          onClose={() => setIsCameraMode(false)}
+          onClose={handleCloseCamera}
+          continuous={batchMode}
+          addedCount={addedCount}
+          lastAddedLabel={lastAddedLabel}
         />
       )}
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -144,7 +192,9 @@ export function DiscogsBarcodeInput({
           {error && <p className="mt-1 text-sm text-red-400">{error}</p>}
           <p className="mt-1 text-xs text-steel-500">
             {isSupported && !value
-              ? 'Enter barcode or tap camera icon to scan'
+              ? batchMode
+                ? 'Enter barcode or tap camera icon to scan multiple records'
+                : 'Enter barcode or tap camera icon to scan'
               : 'Enter the barcode number from the vinyl sleeve or insert'}
           </p>
         </div>

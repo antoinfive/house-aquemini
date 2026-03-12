@@ -1,18 +1,42 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2 } from 'lucide-react';
 
 interface ScanOverlayProps {
   isScanning: boolean;
   isSuccess: boolean;
+  continuous?: boolean;
+  addedCount?: number;
+  lastAddedLabel?: string | null;
 }
 
-export function ScanOverlay({ isScanning, isSuccess }: ScanOverlayProps) {
+export function ScanOverlay({
+  isScanning,
+  isSuccess,
+  continuous = false,
+  addedCount = 0,
+  lastAddedLabel = null,
+}: ScanOverlayProps) {
   return (
     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
       {/* Semi-transparent backdrop outside frame */}
       <div className="absolute inset-0 bg-black/60" />
+
+      {/* Batch count badge */}
+      {continuous && addedCount > 0 && (
+        <motion.div
+          className="absolute top-16 left-0 right-0 z-20 flex justify-center"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <div className="px-4 py-1.5 bg-green-500/90 backdrop-blur-sm rounded-full">
+            <span className="text-white text-sm font-medium">
+              {addedCount} {addedCount === 1 ? 'item' : 'items'} added
+            </span>
+          </div>
+        </motion.div>
+      )}
 
       {/* Scan frame container */}
       <div className="relative z-10 w-[280px] h-[200px]">
@@ -63,6 +87,24 @@ export function ScanOverlay({ isScanning, isSuccess }: ScanOverlayProps) {
         )}
       </div>
 
+      {/* Last added label toast */}
+      <AnimatePresence>
+        {continuous && lastAddedLabel && (
+          <motion.div
+            className="absolute z-20 left-4 right-4"
+            style={{ top: 'calc(50% + 120px)' }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="mx-auto max-w-xs px-4 py-2 bg-white/10 backdrop-blur-sm rounded-lg text-center">
+              <p className="text-white text-sm font-medium truncate">{lastAddedLabel}</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Instruction text */}
       {isScanning && !isSuccess && (
         <motion.div
@@ -71,7 +113,9 @@ export function ScanOverlay({ isScanning, isSuccess }: ScanOverlayProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <p className="text-white text-sm font-medium mb-1">Position barcode within frame</p>
+          <p className="text-white text-sm font-medium mb-1">
+            {continuous ? 'Scan next barcode or tap X to finish' : 'Position barcode within frame'}
+          </p>
           <p className="text-white/70 text-xs">Scanning...</p>
         </motion.div>
       )}

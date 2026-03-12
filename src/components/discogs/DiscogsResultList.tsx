@@ -17,6 +17,9 @@ interface DiscogsResultListProps {
   onLoadMore?: () => void;
   selectingId?: number | null;
   emptyMessage?: string;
+  onQuickAdd?: (result: SearchResultDisplay) => void;
+  quickAddingId?: number | null;
+  quickAddedIds?: Set<number>;
 }
 
 export function DiscogsResultList({
@@ -28,6 +31,9 @@ export function DiscogsResultList({
   onLoadMore,
   selectingId = null,
   emptyMessage = 'No results found. Try a different search.',
+  onQuickAdd,
+  quickAddingId = null,
+  quickAddedIds,
 }: DiscogsResultListProps) {
   // Loading skeleton
   if (isLoading && results.length === 0) {
@@ -113,6 +119,9 @@ export function DiscogsResultList({
             result={result}
             onSelect={onSelect}
             isSelecting={selectingId === result.id}
+            onQuickAdd={onQuickAdd}
+            isQuickAdding={quickAddingId === result.id}
+            isQuickAdded={quickAddedIds?.has(result.id) ?? false}
           />
         ))}
       </div>
