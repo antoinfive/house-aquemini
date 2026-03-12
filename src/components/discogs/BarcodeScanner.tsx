@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { BrowserMultiFormatReader, BarcodeFormat, DecodeHintType } from '@zxing/library';
+import { BrowserMultiFormatReader, IScannerControls } from '@zxing/browser';
+import { BarcodeFormat, DecodeHintType } from '@zxing/library';
 import { X } from 'lucide-react';
 import { ScanOverlay } from './ScanOverlay';
 
@@ -14,35 +15,16 @@ interface BarcodeScannerProps {
 export function BarcodeScanner({ onScan, onError, onClose }: BarcodeScannerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const readerRef = useRef<BrowserMultiFormatReader | null>(null);
+  const controlsRef = useRef<IScannerControls | null>(null);
   const [isScanning, setIsScanning] = useState(true);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     let mounted = true;
-    let stream: MediaStream | null = null;
 
     const startScanning = async () => {
       try {
-        // Request camera permissions
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: 'environment', // Prefer back camera on mobile
-            width: { ideal: 1280 },
-            height: { ideal: 720 },
-          },
-        });
-
-        if (!mounted || !videoRef.current) {
-          stream.getTracks().forEach((track) => track.stop());
-          return;
-        }
-
-        // Set up video element
-        videoRef.current.srcObject = stream;
-        await videoRef.current.play();
-
-        // Initialize barcode reader with UPC/EAN formats
         const hints = new Map();
         hints.set(DecodeHintType.POSSIBLE_FORMATS, [
           BarcodeFormat.UPC_A,
@@ -51,40 +33,35 @@ export function BarcodeScanner({ onScan, onError, onClose }: BarcodeScannerProps
           BarcodeFormat.EAN_8,
         ]);
 
-        const reader = new BrowserMultiFormatReader(hints);
+        const reader = new BrowserMultiFormatReader(hints, {
+          delayBetweenScanAttempts: 300,
+        });
         readerRef.current = reader;
 
-        // Start continuous decoding using decodeFromVideoDevice
-        const scan = async () => {
-          try {
-            const result = await reader.decodeFromVideoElement(videoRef.current!);
+        const controls = await reader.decodeFromConstraints(
+          {
+            video: {
+              facingMode: 'environment',
+              width: { ideal: 1280 },
+              height: { ideal: 720 },
+            },
+          },
+          videoRef.current!,
+          (result, error, controls) => {
             if (!mounted) return;
-
             if (result) {
               const barcode = result.getText();
+              controls.stop();
               setIsSuccess(true);
               setIsScanning(false);
-
-              // Show success animation briefly before closing
-              setTimeout(() => {
-                onScan(barcode);
-              }, 500);
-            } else {
-              // Continue scanning if no result
-              if (mounted) {
-                requestAnimationFrame(scan);
-              }
+              setTimeout(() => onScan(barcode), 500);
             }
-          } catch (error) {
-            // Continue scanning on errors (common during scanning process)
-            if (mounted) {
-              requestAnimationFrame(scan);
-            }
+            // NotFoundException on frames without barcodes is normal — ignore
           }
-        };
+        );
 
-        // Start scanning loop
-        scan();
+        controlsRef.current = controls;
+        if (!mounted) controls.stop();
       } catch (err) {
         if (!mounted) return;
 
@@ -108,19 +85,12 @@ export function BarcodeScanner({ onScan, onError, onClose }: BarcodeScannerProps
 
     startScanning();
 
-    // Cleanup function
     return () => {
       mounted = false;
-
-      // Stop camera stream
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
+      if (controlsRef.current) {
+        controlsRef.current.stop();
       }
-
-      // Stop barcode reader
-      if (readerRef.current) {
-        readerRef.current.reset();
-      }
+      BrowserMultiFormatReader.releaseAllStreams();
     };
   }, [onScan, onError]);
 
