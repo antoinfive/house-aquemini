@@ -39,7 +39,9 @@
       "Bash(pnpm run build:*)",
       "Bash(pnpm run dev)",
       "Bash(ngrok http:*)",
-      "mcp__plugin_playwright_playwright__browser_resize"
+      "mcp__plugin_playwright_playwright__browser_resize",
+      "mcp__plugin_playwright_playwright__browser_wait_for",
+      "Bash(git status:*)"
     ]
   }
 }
