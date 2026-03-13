@@ -30,7 +30,7 @@ export function Header() {
           <Link href="/" className="flex-1 flex items-center gap-3 group">
             <div className="w-8 h-8 rounded-full bg-steel-700 border border-steel-600 flex items-center justify-center group-hover:border-brass-400 transition-colors">
               <svg
-                className="w-5 h-5 text-brass-400"
+                className="w-5 h-5 text-brass-400 group-hover:animate-spin-slow"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -40,7 +40,7 @@ export function Header() {
                 <circle cx="12" cy="12" r="3" strokeWidth="2" />
               </svg>
             </div>
-            <span className="font-semibold text-lg text-steel-100 tracking-tight">
+            <span className="font-semibold text-lg text-steel-100 tracking-tight font-[family-name:var(--font-display)]">
               House Aquemini
             </span>
           </Link>
@@ -153,10 +153,10 @@ function NavLink({ href, isActive, children }: NavLinkProps) {
     <Link
       href={href}
       className={`
-        px-3 py-2 rounded text-sm font-medium transition-colors focus-ring tracking-wide
+        px-3 py-2 rounded-lg text-sm font-medium transition-colors focus-ring
         ${
           isActive
-            ? 'bg-steel-700 text-brass-400 border-b-2 border-brass-400'
+            ? 'bg-brass-400/10 text-brass-400'
             : 'text-steel-400 hover:text-brass-400 hover:bg-steel-800'
         }
       `}
@@ -176,10 +176,10 @@ function MobileNavLink({ href, isActive, onClick, children }: MobileNavLinkProps
       href={href}
       onClick={onClick}
       className={`
-        block px-3 py-2 rounded text-base font-medium transition-colors focus-ring
+        block px-3 py-2 rounded-lg text-base font-medium transition-colors focus-ring
         ${
           isActive
-            ? 'bg-steel-700 text-brass-400'
+            ? 'bg-brass-400/10 text-brass-400'
             : 'text-steel-400 hover:text-brass-400 hover:bg-steel-700'
         }
       `}

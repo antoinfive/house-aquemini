@@ -1,5 +1,6 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import { WishlistCard } from './WishlistCard';
 import type { WishlistItem } from '@/lib/types';
 
@@ -67,16 +68,22 @@ export function WishlistGrid({
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-      {items.map((item) => (
-        <WishlistCard
+      {items.map((item, index) => (
+        <motion.div
           key={item.id}
-          item={item}
-          isOwner={isOwner}
-          onClick={onItemClick}
-          onEdit={onEdit}
-          onDelete={onDelete}
-          onAddToCollection={onAddToCollection}
-        />
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: index * 0.04, ease: 'easeOut' as const }}
+        >
+          <WishlistCard
+            item={item}
+            isOwner={isOwner}
+            onClick={onItemClick}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onAddToCollection={onAddToCollection}
+          />
+        </motion.div>
       ))}
     </div>
   );

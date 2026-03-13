@@ -156,7 +156,7 @@ export function VinylDetail({
           <div>
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h1 className="text-3xl font-bold text-steel-100 tracking-tight">
+                <h1 className="text-3xl font-bold text-steel-100 tracking-tight font-[family-name:var(--font-display)]">
                   {vinyl.album}
                 </h1>
                 <p className="text-xl text-steel-300 mt-1">{vinyl.artist}</p>

@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { Vinyl } from '@/lib/types';
 import { useCarousel } from './useCarousel';
 import { CarouselItem } from './CarouselItem';
@@ -160,7 +160,7 @@ export function AlbumCarousel({ vinyls, isLoading = false }: AlbumCarouselProps)
 
   return (
     <div
-      className="relative w-full h-[350px] overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-brass-400 focus-visible:ring-offset-2 focus-visible:ring-offset-steel-950 rounded-lg"
+      className="relative w-full"
       onMouseEnter={pause}
       onMouseLeave={resume}
       onKeyDown={handleKeyDown}
@@ -168,30 +168,51 @@ export function AlbumCarousel({ vinyls, isLoading = false }: AlbumCarouselProps)
       role="region"
       aria-label="Album carousel"
     >
-      <motion.div
-        className="relative h-full w-full flex items-center justify-center"
-        drag="x"
-        dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.1}
-        onDragEnd={handleDragEnd}
-      >
-        {visibleItems.map(({ vinyl, index, offset }) => (
-          <CarouselItem
-            key={vinyl.id}
-            vinyl={vinyl}
-            offset={offset}
-            itemSize={itemSize}
-            spacing={spacing}
-            onClick={() => handleItemClick(vinyl, index)}
-          />
-        ))}
-      </motion.div>
+      <div className="relative h-[350px] overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-brass-400 focus-visible:ring-offset-2 focus-visible:ring-offset-steel-950 rounded-lg">
+        <motion.div
+          className="relative h-full w-full flex items-center justify-center"
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.1}
+          onDragEnd={handleDragEnd}
+        >
+          {visibleItems.map(({ vinyl, index, offset }) => (
+            <CarouselItem
+              key={vinyl.id}
+              vinyl={vinyl}
+              offset={offset}
+              itemSize={itemSize}
+              spacing={spacing}
+              onClick={() => handleItemClick(vinyl, index)}
+            />
+          ))}
+        </motion.div>
 
-      <CarouselControls
-        onPrevious={goToPrevious}
-        onNext={goToNext}
-        hidden={vinyls.length <= 1}
-      />
+        <CarouselControls
+          onPrevious={goToPrevious}
+          onNext={goToNext}
+          hidden={vinyls.length <= 1}
+        />
+      </div>
+
+      {/* Album info below carousel */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeIndex}
+          className="mt-4 text-center"
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.25 }}
+        >
+          <p className="text-lg font-semibold text-steel-100 font-[family-name:var(--font-display)] truncate px-4">
+            {vinyls[activeIndex]?.album}
+          </p>
+          <p className="text-sm text-steel-400 truncate px-4">
+            {vinyls[activeIndex]?.artist}
+          </p>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

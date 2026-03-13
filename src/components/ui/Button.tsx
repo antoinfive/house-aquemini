@@ -1,6 +1,7 @@
 'use client';
 
 import { forwardRef, ButtonHTMLAttributes } from 'react';
+import { motion, HTMLMotionProps } from 'framer-motion';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'ghost' | 'outline';
@@ -10,7 +11,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className = '', variant = 'primary', size = 'md', isLoading, children, disabled, ...props }, ref) => {
-    const baseStyles = 'inline-flex items-center justify-center font-medium transition-all focus-ring rounded';
+    const baseStyles = 'inline-flex items-center justify-center font-medium transition-all focus-ring rounded-lg';
 
     const variants = {
       primary: 'btn-primary',
@@ -24,12 +25,16 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       lg: 'px-6 py-3 text-base',
     };
 
+    const isDisabled = disabled || isLoading;
+
     return (
-      <button
+      <motion.button
         ref={ref}
-        className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${disabled || isLoading ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
-        disabled={disabled || isLoading}
-        {...props}
+        whileHover={isDisabled ? undefined : { scale: 1.02 }}
+        whileTap={isDisabled ? undefined : { scale: 0.97 }}
+        className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
+        disabled={isDisabled}
+        {...(props as HTMLMotionProps<"button">)}
       >
         {isLoading ? (
           <>
@@ -58,7 +63,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ) : (
           children
         )}
-      </button>
+      </motion.button>
     );
   }
 );

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
+import { getGenreColors } from '@/lib/utils/genreColors';
 import type { VinylFilters } from '@/lib/types';
 
 interface FilterBarProps {
@@ -126,21 +127,25 @@ export function FilterBar({
               Genre
             </label>
             <div className="flex flex-wrap gap-2">
-              {COMMON_GENRES.map((genre) => (
-                <button
-                  key={genre}
-                  type="button"
-                  onClick={() => handleGenreToggle(genre)}
-                  className={`px-3 py-1.5 rounded text-sm transition-colors ${
-                    selectedGenres.includes(genre)
-                      ? 'bg-brass-500 text-steel-900 font-medium'
-                      : 'bg-steel-700 text-steel-300 hover:bg-steel-600 border border-steel-600'
-                  }`}
-                  aria-pressed={selectedGenres.includes(genre)}
-                >
-                  {genre}
-                </button>
-              ))}
+              {COMMON_GENRES.map((genre) => {
+                const colors = getGenreColors(genre);
+                const isSelected = selectedGenres.includes(genre);
+                return (
+                  <button
+                    key={genre}
+                    type="button"
+                    onClick={() => handleGenreToggle(genre)}
+                    className={`px-3 py-1.5 rounded-full text-sm transition-colors border ${
+                      isSelected
+                        ? `${colors.bg} ${colors.text} ${colors.border} font-medium`
+                        : 'bg-steel-700 text-steel-300 hover:bg-steel-600 border-steel-600'
+                    }`}
+                    aria-pressed={isSelected}
+                  >
+                    {genre}
+                  </button>
+                );
+              })}
             </div>
             {selectedGenres.length > 0 && (
               <p className="mt-2 text-sm text-steel-400">

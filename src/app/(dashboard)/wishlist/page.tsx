@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useWishlist } from '@/lib/hooks/useWishlist';
 import { useVinyls } from '@/lib/hooks/useVinyls';
@@ -238,13 +239,19 @@ export default function WishlistPage() {
   const isLoading = authLoading || wishlistLoading;
 
   return (
-    <div className="min-h-screen">
+    <motion.div
+      className="min-h-screen"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
+    >
       {/* Page Header */}
-      <div className="bg-steel-900/50 border-b border-steel-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="relative bg-steel-900/50 border-b border-steel-700 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_80%_50%_at_50%_0%,rgba(232,155,30,0.06)_0%,transparent_70%)]" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
           <div className={`flex flex-col sm:flex-row sm:items-center gap-4 ${isOwner ? 'sm:justify-between' : 'sm:justify-center text-center'}`}>
             <div>
-              <h1 className="text-3xl font-bold text-steel-100 tracking-tight">
+              <h1 className="text-3xl font-bold text-steel-100 tracking-tight font-[family-name:var(--font-display)]">
                 Wishlist
               </h1>
               <p className="mt-1 text-steel-400">
@@ -429,6 +436,6 @@ export default function WishlistPage() {
           </div>
         </div>
       </Modal>
-    </div>
+    </motion.div>
   );
 }

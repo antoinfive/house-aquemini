@@ -1,29 +1,29 @@
 @import "tailwindcss";
 
-/* Industrial Design System - "Precision Audio" */
+/* Design System - "The Crate Digger" */
 :root {
-  /* Brushed Steel - Primary surface colors */
-  --steel-50: #f8f9fa;
-  --steel-100: #e9ecef;
-  --steel-200: #dee2e6;
-  --steel-300: #ced4da;
-  --steel-400: #adb5bd;
-  --steel-500: #6c757d;
-  --steel-600: #495057;
-  --steel-700: #343a40;
-  --steel-800: #212529;
-  --steel-900: #16191c;
-  --steel-950: #0d0f11;
+  /* Warm Charcoal - Primary surface colors */
+  --steel-50: #faf8f6;
+  --steel-100: #ede9e4;
+  --steel-200: #d5cfc8;
+  --steel-300: #b5ada3;
+  --steel-400: #8e8578;
+  --steel-500: #6b6358;
+  --steel-600: #4a4440;
+  --steel-700: #36322f;
+  --steel-800: #252220;
+  --steel-900: #1a1816;
+  --steel-950: #110f0e;
 
-  /* Brass - Accent color (#dca411) */
+  /* Amber - Accent color */
   --brass-50: #fef9e7;
   --brass-100: #fcefbf;
   --brass-200: #f9e08c;
-  --brass-300: #f5ce54;
-  --brass-400: #dca411;
-  --brass-500: #c4920f;
-  --brass-600: #a67a0d;
-  --brass-700: #7f5d0a;
+  --brass-300: #f5b84d;
+  --brass-400: #e89b1e;
+  --brass-500: #cf8416;
+  --brass-600: #ad6912;
+  --brass-700: #864e10;
   --brass-800: #5c4408;
   --brass-900: #3d2d05;
 
@@ -38,6 +38,11 @@
   --carbon-700: #252525;
   --carbon-800: #1a1a1a;
   --carbon-900: #0f0f0f;
+
+  /* Terracotta - Secondary accent */
+  --terracotta-400: #c4705a;
+  --terracotta-500: #a85d4a;
+  --terracotta-600: #8d4e3e;
 
   /* Semantic colors - Dark-first design */
   --background: var(--steel-950);
@@ -57,8 +62,9 @@
   --success: #28a745;
 
   /* Typography */
-  --font-sans: var(--font-dm-sans), system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), 'SF Mono', monospace;
+  --font-sans: var(--font-source-sans-3), system-ui, sans-serif;
+  --font-mono: var(--font-ibm-plex-mono), 'SF Mono', monospace;
+  --font-display: var(--font-playfair-display), Georgia, serif;
 
   /* Letter spacing */
   --tracking-tight: -0.025em;
@@ -108,6 +114,11 @@
   --color-carbon-800: var(--carbon-800);
   --color-carbon-900: var(--carbon-900);
 
+  /* Terracotta palette */
+  --color-terracotta-400: var(--terracotta-400);
+  --color-terracotta-500: var(--terracotta-500);
+  --color-terracotta-600: var(--terracotta-600);
+
   /* Semantic colors */
   --color-card: var(--card-bg);
   --color-card-border: var(--card-border);
@@ -119,6 +130,7 @@
   /* Typography */
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
+  --font-display: var(--font-display);
 }
 
 body {
@@ -127,40 +139,38 @@ body {
   font-family: var(--font-sans);
 }
 
-/* Primary Button - Brass accent with metallic sheen */
+/* Primary Button - Warm amber flat */
 .btn-primary {
-  background: linear-gradient(180deg, var(--brass-400) 0%, var(--brass-500) 100%);
-  border: 1px solid var(--brass-600);
+  background: var(--brass-400);
+  border: 1px solid var(--brass-500);
   color: var(--steel-900);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    0 1px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   font-weight: 600;
-  letter-spacing: 0.025em;
-  text-transform: uppercase;
-  font-size: 0.8125rem;
-  transition: all 0.15s ease;
+  letter-spacing: 0.01em;
+  font-size: 0.875rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
 .btn-primary:hover {
-  background: linear-gradient(180deg, var(--brass-300) 0%, var(--brass-400) 100%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    0 2px 8px rgba(220, 164, 17, 0.3);
+  background: var(--brass-300);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(232, 155, 30, 0.3);
 }
 
 .btn-primary:active {
-  background: linear-gradient(180deg, var(--brass-500) 0%, var(--brass-600) 100%);
-  box-shadow:
-    inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  background: var(--brass-500);
+  transform: translateY(0);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Ghost Button - Subtle steel with brass hover */
+/* Ghost Button */
 .btn-ghost {
   background: transparent;
   color: var(--steel-300);
   border: 1px solid transparent;
-  transition: all 0.15s ease;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
 .btn-ghost:hover {
@@ -169,12 +179,13 @@ body {
   color: var(--brass-400);
 }
 
-/* Outline Button - Steel border with brass accent on hover */
+/* Outline Button */
 .btn-outline {
   background: transparent;
   border: 1px solid var(--steel-600);
   color: var(--steel-200);
-  transition: all 0.15s ease;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
 .btn-outline:hover {
@@ -189,15 +200,15 @@ body {
   border: 1px solid var(--steel-700);
   color: var(--steel-100);
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
-  border-radius: 4px;
-  transition: all 0.15s ease;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
 .input-industrial:focus {
   border-color: var(--brass-400);
   box-shadow:
     inset 0 2px 4px rgba(0, 0, 0, 0.3),
-    0 0 0 2px rgba(220, 164, 17, 0.2);
+    0 0 0 2px rgba(232, 155, 30, 0.2);
   outline: none;
 }
 
@@ -208,16 +219,15 @@ body {
 .input-label {
   color: var(--steel-400);
   font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.03em;
   font-weight: 500;
 }
 
-/* Industrial Card - Steel panel with beveled edge */
+/* Industrial Card */
 .card-industrial {
   background: var(--steel-800);
   border: 1px solid var(--steel-700);
-  border-radius: 6px;
+  border-radius: 8px;
   box-shadow:
     0 1px 0 var(--steel-600),
     0 4px 12px rgba(0, 0, 0, 0.4);
@@ -231,63 +241,80 @@ body {
     0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
-/* Vinyl Card - Dark card with brass accent on hover */
+/* Vinyl Card */
 .card-vinyl {
   background: var(--steel-800);
   border: 1px solid var(--steel-700);
-  border-radius: 6px;
+  border-radius: 8px;
   overflow: hidden;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .card-vinyl:hover {
-  border-color: var(--brass-400);
-  transform: translateY(-2px);
+  border-color: rgba(232, 155, 30, 0.4);
+  transform: translateY(-2px) rotate(-0.5deg);
   box-shadow:
-    0 0 0 1px var(--brass-400),
-    0 8px 24px rgba(0, 0, 0, 0.4);
+    0 0 0 1px rgba(232, 155, 30, 0.2),
+    0 12px 28px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(232, 155, 30, 0.1);
 }
 
-/* Industrial Header */
+/* Header */
 .header-industrial {
   background: linear-gradient(180deg, var(--steel-800) 0%, var(--steel-900) 100%);
   border-bottom: 1px solid var(--steel-700);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: 0 1px 0 rgba(232, 155, 30, 0.05);
 }
 
 /* Modal styles */
 .modal-overlay {
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(4px);
+  background: rgba(17, 15, 14, 0.9);
+  backdrop-filter: blur(8px);
 }
 
 .modal-content {
   background: var(--steel-800);
   border: 1px solid var(--steel-600);
-  border-radius: 8px;
+  border-radius: 12px;
   box-shadow:
     0 0 0 1px var(--steel-700),
     0 24px 48px rgba(0, 0, 0, 0.5);
 }
 
-/* Special Effects */
-.brushed-metal {
-  background-image:
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 2px,
-      rgba(255, 255, 255, 0.02) 2px,
-      rgba(255, 255, 255, 0.02) 4px
-    );
+/* Texture - Subtle grain overlay */
+.texture-grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* Ambient warm glow */
+.ambient-glow {
+  position: relative;
+}
+
+.ambient-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(232, 155, 30, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(196, 112, 90, 0.04) 0%, transparent 70%);
+  z-index: 0;
 }
 
 .brass-glow {
-  box-shadow: 0 0 20px rgba(220, 164, 17, 0.3);
+  box-shadow: 0 0 20px rgba(232, 155, 30, 0.3);
 }
 
 .brass-glow-text {
-  text-shadow: 0 0 20px rgba(220, 164, 17, 0.5);
+  text-shadow: 0 0 20px rgba(232, 155, 30, 0.5);
 }
 
 /* Focus Ring for Accessibility */
@@ -308,6 +335,11 @@ body {
 
 .animate-spin-record {
   animation: spin-record 1.8s linear infinite;
+}
+
+/* Slow spin for logo hover */
+.animate-spin-slow {
+  animation: spin-record 3s linear infinite;
 }
 
 /* VU meter animation */
@@ -331,8 +363,25 @@ body {
   color: var(--steel-300);
   border: 1px solid var(--steel-600);
   font-size: 0.6875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  border-radius: 9999px;
+  letter-spacing: 0.02em;
+}
+
+/* Vinyl peek effect */
+.vinyl-peek-disc {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.group:hover .vinyl-peek-disc {
+  transform: translateX(60%);
+}
+
+.vinyl-peek-cover {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.group:hover .vinyl-peek-cover {
+  transform: translateX(-4%);
 }
 
 /* Carousel Styles */
@@ -340,7 +389,7 @@ body {
   box-shadow:
     0 0 0 2px var(--brass-400),
     0 20px 40px rgba(0, 0, 0, 0.5),
-    0 0 60px rgba(220, 164, 17, 0.2);
+    0 0 60px rgba(232, 155, 30, 0.2);
 }
 
 .carousel-item-side {

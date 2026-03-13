@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import type { Vinyl } from '@/lib/types';
+import { getGenreColors } from '@/lib/utils/genreColors';
 
 interface VinylCardProps {
   vinyl: Vinyl;
@@ -54,35 +55,50 @@ export function VinylCard({
       onKeyDown={(e) => e.key === 'Enter' && handleClick()}
       aria-label={`${vinyl.album} by ${vinyl.artist}`}
     >
-      {/* Cover Art */}
-      <div className="relative aspect-square bg-steel-900">
-        {vinyl.cover_art_url && !imageError ? (
-          <Image
-            src={vinyl.cover_art_url}
-            alt={`${vinyl.album} cover`}
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
-            onError={() => setImageError(true)}
-          />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <svg
-              className="w-16 h-16 text-steel-600"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="1.5" />
-              <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" strokeWidth="1.5" />
-              <circle cx="12" cy="12" r="1.5" fill="currentColor" />
-            </svg>
-          </div>
-        )}
+      {/* Cover Art with Vinyl Peek */}
+      <div className="relative aspect-square bg-steel-900 overflow-hidden">
+        {/* Vinyl disc that peeks out on hover */}
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[85%] aspect-square z-0 vinyl-peek-disc translate-x-full">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <circle cx="100" cy="100" r="98" fill="#1a1816" stroke="#36322f" strokeWidth="1" />
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#252220" strokeWidth="0.5" />
+            <circle cx="100" cy="100" r="60" fill="none" stroke="#252220" strokeWidth="0.5" />
+            <circle cx="100" cy="100" r="40" fill="none" stroke="#252220" strokeWidth="0.5" />
+            <circle cx="100" cy="100" r="20" fill="#252220" stroke="#36322f" strokeWidth="1" />
+            <circle cx="100" cy="100" r="5" fill="#e89b1e" />
+          </svg>
+        </div>
+
+        {/* Cover art */}
+        <div className="relative w-full h-full z-10 vinyl-peek-cover">
+          {vinyl.cover_art_url && !imageError ? (
+            <Image
+              src={vinyl.cover_art_url}
+              alt={`${vinyl.album} cover`}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              onError={() => setImageError(true)}
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center bg-steel-900">
+              <svg
+                className="w-16 h-16 text-steel-600"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+              </svg>
+            </div>
+          )}
+        </div>
 
         {/* Hover Overlay */}
         <div
-          className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-opacity duration-200 ${
+          className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-opacity duration-200 z-20 ${
             isHovered ? 'opacity-100' : 'opacity-0'
           }`}
         >
@@ -156,14 +172,17 @@ export function VinylCard({
         <p className="text-sm text-steel-400 truncate">{vinyl.artist}</p>
         {vinyl.genre && vinyl.genre.length > 0 ? (
           <div className="flex flex-wrap gap-1 mt-2">
-            {vinyl.genre.slice(0, 2).map((g) => (
-              <span
-                key={g}
-                className="genre-tag px-2 py-0.5 rounded"
-              >
-                {g}
-              </span>
-            ))}
+            {vinyl.genre.slice(0, 2).map((g) => {
+              const colors = getGenreColors(g);
+              return (
+                <span
+                  key={g}
+                  className={`px-2 py-0.5 rounded-full text-[0.6875rem] border ${colors.bg} ${colors.text} ${colors.border}`}
+                >
+                  {g}
+                </span>
+              );
+            })}
             {vinyl.genre.length > 2 ? (
               <span className="px-2 py-0.5 text-steel-500 text-xs">+{vinyl.genre.length - 2}</span>
             ) : null}

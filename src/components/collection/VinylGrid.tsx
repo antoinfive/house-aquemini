@@ -1,6 +1,7 @@
 'use client';
 
 import { memo } from 'react';
+import { motion } from 'framer-motion';
 import { VinylCard } from './VinylCard';
 import type { Vinyl } from '@/lib/types';
 
@@ -74,16 +75,22 @@ export function VinylGrid({
       ) : vinyls.length === 0 ? (
         <EmptyState message={emptyMessage} />
       ) : (
-        vinyls.map((vinyl) => (
-          <VinylCard
+        vinyls.map((vinyl, index) => (
+          <motion.div
             key={vinyl.id}
-            vinyl={vinyl}
-            isOwner={isOwner}
-            onClick={onVinylClick}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onSetNowPlaying={onSetNowPlaying}
-          />
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: index * 0.04, ease: 'easeOut' as const }}
+          >
+            <VinylCard
+              vinyl={vinyl}
+              isOwner={isOwner}
+              onClick={onVinylClick}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onSetNowPlaying={onSetNowPlaying}
+            />
+          </motion.div>
         ))
       )}
     </div>

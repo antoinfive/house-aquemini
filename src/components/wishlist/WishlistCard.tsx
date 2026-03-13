@@ -58,39 +58,54 @@ export function WishlistCard({
       onKeyDown={(e) => e.key === 'Enter' && handleClick()}
       aria-label={`${item.album} by ${item.artist}`}
     >
-      {/* Cover Art */}
-      <div className="relative aspect-square bg-steel-900">
-        {item.cover_art_url && !imageError ? (
-          <Image
-            src={item.cover_art_url}
-            alt={`${item.album} cover`}
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
-            onError={() => setImageError(true)}
-          />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <svg
-              className="w-16 h-16 text-steel-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-              />
-            </svg>
-          </div>
-        )}
+      {/* Cover Art with Vinyl Peek */}
+      <div className="relative aspect-square bg-steel-900 overflow-hidden">
+        {/* Vinyl disc that peeks out on hover */}
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[85%] aspect-square z-0 vinyl-peek-disc translate-x-full">
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <circle cx="100" cy="100" r="98" fill="#1a1816" stroke="#36322f" strokeWidth="1" />
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#252220" strokeWidth="0.5" />
+            <circle cx="100" cy="100" r="60" fill="none" stroke="#252220" strokeWidth="0.5" />
+            <circle cx="100" cy="100" r="40" fill="none" stroke="#252220" strokeWidth="0.5" />
+            <circle cx="100" cy="100" r="20" fill="#252220" stroke="#36322f" strokeWidth="1" />
+            <circle cx="100" cy="100" r="5" fill="#e89b1e" />
+          </svg>
+        </div>
+
+        {/* Cover art */}
+        <div className="relative w-full h-full z-10 vinyl-peek-cover">
+          {item.cover_art_url && !imageError ? (
+            <Image
+              src={item.cover_art_url}
+              alt={`${item.album} cover`}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              onError={() => setImageError(true)}
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center bg-steel-900">
+              <svg
+                className="w-16 h-16 text-steel-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+            </div>
+          )}
+        </div>
 
         {/* Hover Overlay */}
         <div
-          className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-opacity duration-200 ${
+          className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-opacity duration-200 z-20 ${
             isHovered ? 'opacity-100' : 'opacity-0'
           }`}
         >
