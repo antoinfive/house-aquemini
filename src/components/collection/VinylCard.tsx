@@ -171,20 +171,20 @@ export function VinylCard({
         <h3 className="font-medium text-steel-100 truncate">{vinyl.album}</h3>
         <p className="text-sm text-steel-400 truncate">{vinyl.artist}</p>
         {vinyl.genre && vinyl.genre.length > 0 ? (
-          <div className="flex flex-wrap gap-1 mt-2">
+          <div className="flex flex-nowrap overflow-hidden gap-1 mt-2">
             {vinyl.genre.slice(0, 2).map((g) => {
               const colors = getGenreColors(g);
               return (
                 <span
                   key={g}
-                  className={`px-2 py-0.5 rounded-full text-[0.6875rem] border ${colors.bg} ${colors.text} ${colors.border}`}
+                  className={`px-2 py-0.5 rounded-full text-[0.6875rem] border whitespace-nowrap shrink-0 ${colors.bg} ${colors.text} ${colors.border}`}
                 >
                   {g}
                 </span>
               );
             })}
             {vinyl.genre.length > 2 ? (
-              <span className="px-2 py-0.5 text-steel-500 text-xs">+{vinyl.genre.length - 2}</span>
+              <span className="px-2 py-0.5 text-steel-500 text-xs shrink-0 whitespace-nowrap">+{vinyl.genre.length - 2}</span>
             ) : null}
           </div>
         ) : null}
