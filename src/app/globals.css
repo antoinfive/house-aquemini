@@ -396,6 +396,29 @@ body {
   filter: brightness(0.65) saturate(0.85);
 }
 
+/* Card enter animation for grid items */
+@keyframes card-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.card-enter {
+  animation: card-enter 0.35s ease-out both;
+}
+
+/* Page enter animation */
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.page-enter {
+  animation: page-enter 0.4s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-enter, .page-enter { animation: none; }
+  .card-vinyl { transition: none; }
+}
+
 /* Responsive carousel item sizing */
 :root {
   --carousel-item-size: 200px;

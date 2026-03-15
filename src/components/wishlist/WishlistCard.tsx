@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import Image from 'next/image';
 import type { WishlistItem } from '@/lib/types';
 
@@ -14,7 +14,7 @@ interface WishlistCardProps {
   isDragging?: boolean;
 }
 
-export function WishlistCard({
+export const WishlistCard = memo(function WishlistCard({
   item,
   isOwner = false,
   onEdit,
@@ -24,7 +24,6 @@ export function WishlistCard({
   isDragging = false,
 }: WishlistCardProps) {
   const [imageError, setImageError] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
 
   const handleClick = () => {
     onClick?.(item);
@@ -51,8 +50,6 @@ export function WishlistCard({
         isDragging ? 'opacity-50 scale-95 rotate-2' : ''
       }`}
       onClick={handleClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === 'Enter' && handleClick()}
@@ -103,11 +100,9 @@ export function WishlistCard({
           )}
         </div>
 
-        {/* Hover Overlay */}
+        {/* Hover Overlay — CSS-only visibility */}
         <div
-          className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-opacity duration-200 z-20 ${
-            isHovered ? 'opacity-100' : 'opacity-0'
-          }`}
+          className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-opacity duration-200 z-20 opacity-0 group-hover:opacity-100"
         >
           <div className="absolute bottom-0 left-0 right-0 p-4">
             <h3 className="text-steel-100 font-semibold text-lg truncate">{item.album}</h3>
@@ -189,4 +184,4 @@ export function WishlistCard({
       </div>
     </div>
   );
-}
+});

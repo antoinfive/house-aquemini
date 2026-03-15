@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import type { Vinyl, VinylFormData, ApiResponse } from '@/lib/types';
+import type { Vinyl, VinylFormData, ApiResponse, PaginatedResponse } from '@/lib/types';
 
 export async function GET(request: NextRequest) {
   const supabase = await createClient();
@@ -11,10 +11,12 @@ export async function GET(request: NextRequest) {
   const genres = searchParams.getAll('genre');
   const yearStart = searchParams.get('yearStart');
   const yearEnd = searchParams.get('yearEnd');
+  const limit = parseInt(searchParams.get('limit') || '50', 10);
+  const offset = parseInt(searchParams.get('offset') || '0', 10);
 
   let query = supabase
     .from('vinyls')
-    .select('*')
+    .select('*', { count: 'exact' })
     .order('artist', { ascending: true });
 
   // Apply search filter (artist or album)
@@ -23,8 +25,15 @@ export async function GET(request: NextRequest) {
   }
 
   // Apply genre filter (overlaps - records with ANY of the selected genres)
+  // Include hyphen/space variants so "Hip-Hop" also matches "Hip Hop" in the DB
   if (genres.length > 0) {
-    query = query.overlaps('genre', genres);
+    const normalizedGenres = [...new Set(genres.flatMap(g => {
+      const variants = [g];
+      if (g.includes('-')) variants.push(g.replace(/-/g, ' '));
+      if (g.includes(' ')) variants.push(g.replace(/ /g, '-'));
+      return variants;
+    }))];
+    query = query.overlaps('genre', normalizedGenres);
   }
 
   // Apply year range filter
@@ -35,7 +44,10 @@ export async function GET(request: NextRequest) {
     query = query.lte('year', parseInt(yearEnd));
   }
 
-  const { data, error } = await query;
+  // Apply pagination
+  query = query.range(offset, offset + limit - 1);
+
+  const { data, error, count } = await query;
 
   if (error) {
     return NextResponse.json<ApiResponse<null>>(
@@ -44,7 +56,16 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  return NextResponse.json<ApiResponse<Vinyl[]>>({ data, error: null });
+  const total = count ?? 0;
+  const page = Math.floor(offset / limit) + 1;
+
+  return NextResponse.json<PaginatedResponse<Vinyl>>({
+    data: data || [],
+    total,
+    page,
+    pageSize: limit,
+    hasMore: offset + limit < total,
+  });
 }
 
 export async function POST(request: NextRequest) {

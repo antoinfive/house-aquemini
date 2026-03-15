@@ -1,8 +1,8 @@
 'use client';
 
 import { memo } from 'react';
-import { motion } from 'framer-motion';
 import { VinylCard } from './VinylCard';
+import { useInfiniteScroll } from '@/lib/hooks/useInfiniteScroll';
 import type { Vinyl } from '@/lib/types';
 
 interface VinylGridProps {
@@ -14,6 +14,8 @@ interface VinylGridProps {
   onDelete?: (vinyl: Vinyl) => void;
   onSetNowPlaying?: (vinyl: Vinyl) => void;
   emptyMessage?: string;
+  hasMore?: boolean;
+  onLoadMore?: () => void;
 }
 
 // Hoist static array outside component to avoid recreation on each render
@@ -58,7 +60,7 @@ function EmptyState({ message }: { message: string }) {
   );
 }
 
-export function VinylGrid({
+export const VinylGrid = memo(function VinylGrid({
   vinyls,
   isLoading = false,
   isOwner = false,
@@ -67,32 +69,38 @@ export function VinylGrid({
   onDelete,
   onSetNowPlaying,
   emptyMessage = 'Start building your collection by adding your first vinyl record.',
+  hasMore = false,
+  onLoadMore,
 }: VinylGridProps) {
+  const sentinelRef = useInfiniteScroll({ hasMore, isLoading, onLoadMore });
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-      {isLoading ? (
-        <VinylGridSkeleton />
-      ) : vinyls.length === 0 ? (
-        <EmptyState message={emptyMessage} />
-      ) : (
-        vinyls.map((vinyl, index) => (
-          <motion.div
-            key={vinyl.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: index * 0.04, ease: 'easeOut' as const }}
-          >
-            <VinylCard
-              vinyl={vinyl}
-              isOwner={isOwner}
-              onClick={onVinylClick}
-              onEdit={onEdit}
-              onDelete={onDelete}
-              onSetNowPlaying={onSetNowPlaying}
-            />
-          </motion.div>
-        ))
-      )}
-    </div>
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        {isLoading && vinyls.length === 0 ? (
+          <VinylGridSkeleton />
+        ) : vinyls.length === 0 ? (
+          <EmptyState message={emptyMessage} />
+        ) : (
+          vinyls.map((vinyl, index) => (
+            <div
+              key={vinyl.id}
+              className="card-enter"
+              style={{ animationDelay: `${Math.min(index * 0.04, 0.8)}s` }}
+            >
+              <VinylCard
+                vinyl={vinyl}
+                isOwner={isOwner}
+                onClick={onVinylClick}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                onSetNowPlaying={onSetNowPlaying}
+              />
+            </div>
+          ))
+        )}
+      </div>
+      {hasMore && <div ref={sentinelRef} className="h-4" />}
+    </>
   );
-}
+});

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { memo, useState, useRef, useCallback } from 'react';
 import { Button } from '@/components/ui/Button';
 import { getGenreColors } from '@/lib/utils/genreColors';
 import type { VinylFilters } from '@/lib/types';
@@ -29,7 +29,7 @@ const COMMON_GENRES = [
   'Experimental',
 ];
 
-export function FilterBar({
+export const FilterBar = memo(function FilterBar({
   filters,
   onFilterByGenre,
   onFilterByYearRange,
@@ -38,6 +38,8 @@ export function FilterBar({
   const [isExpanded, setIsExpanded] = useState(false);
   const [yearStart, setYearStart] = useState<string>(filters.yearStart?.toString() || '');
   const [yearEnd, setYearEnd] = useState<string>(filters.yearEnd?.toString() || '');
+  const yearStartTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const yearEndTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const selectedGenres = filters.genre || [];
 
@@ -53,19 +55,25 @@ export function FilterBar({
     onFilterByGenre(newGenres);
   };
 
-  const handleYearStartChange = (value: string) => {
+  const handleYearStartChange = useCallback((value: string) => {
     setYearStart(value);
-    const start = value ? parseInt(value, 10) : undefined;
-    const end = yearEnd ? parseInt(yearEnd, 10) : undefined;
-    onFilterByYearRange(start, end);
-  };
+    if (yearStartTimeoutRef.current) clearTimeout(yearStartTimeoutRef.current);
+    yearStartTimeoutRef.current = setTimeout(() => {
+      const start = value ? parseInt(value, 10) : undefined;
+      const end = yearEnd ? parseInt(yearEnd, 10) : undefined;
+      onFilterByYearRange(start, end);
+    }, 500);
+  }, [yearEnd, onFilterByYearRange]);
 
-  const handleYearEndChange = (value: string) => {
+  const handleYearEndChange = useCallback((value: string) => {
     setYearEnd(value);
-    const start = yearStart ? parseInt(yearStart, 10) : undefined;
-    const end = value ? parseInt(value, 10) : undefined;
-    onFilterByYearRange(start, end);
-  };
+    if (yearEndTimeoutRef.current) clearTimeout(yearEndTimeoutRef.current);
+    yearEndTimeoutRef.current = setTimeout(() => {
+      const start = yearStart ? parseInt(yearStart, 10) : undefined;
+      const end = value ? parseInt(value, 10) : undefined;
+      onFilterByYearRange(start, end);
+    }, 500);
+  }, [yearStart, onFilterByYearRange]);
 
   const handleClearAll = () => {
     setYearStart('');
@@ -213,4 +221,4 @@ export function FilterBar({
       )}
     </div>
   );
-}
+});

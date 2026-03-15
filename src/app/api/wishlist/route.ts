@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import type { WishlistItem, WishlistFormData, ApiResponse } from '@/lib/types';
+import type { WishlistItem, WishlistFormData, ApiResponse, PaginatedResponse } from '@/lib/types';
 
 export async function GET(request: NextRequest) {
   const supabase = await createClient();
@@ -8,10 +8,12 @@ export async function GET(request: NextRequest) {
   // Parse query params for filtering
   const searchParams = request.nextUrl.searchParams;
   const search = searchParams.get('search');
+  const limit = parseInt(searchParams.get('limit') || '50', 10);
+  const offset = parseInt(searchParams.get('offset') || '0', 10);
 
   let query = supabase
     .from('wishlist_items')
-    .select('*')
+    .select('*', { count: 'exact' })
     .order('artist', { ascending: true });
 
   // Apply search filter (artist or album)
@@ -19,7 +21,10 @@ export async function GET(request: NextRequest) {
     query = query.or(`artist.ilike.%${search}%,album.ilike.%${search}%`);
   }
 
-  const { data, error } = await query;
+  // Apply pagination
+  query = query.range(offset, offset + limit - 1);
+
+  const { data, error, count } = await query;
 
   if (error) {
     return NextResponse.json<ApiResponse<null>>(
@@ -28,7 +33,16 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  return NextResponse.json<ApiResponse<WishlistItem[]>>({ data, error: null });
+  const total = count ?? 0;
+  const page = Math.floor(offset / limit) + 1;
+
+  return NextResponse.json<PaginatedResponse<WishlistItem>>({
+    data: data || [],
+    total,
+    page,
+    pageSize: limit,
+    hasMore: offset + limit < total,
+  });
 }
 
 export async function POST(request: NextRequest) {

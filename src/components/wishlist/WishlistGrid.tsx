@@ -1,7 +1,8 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { memo } from 'react';
 import { WishlistCard } from './WishlistCard';
+import { useInfiniteScroll } from '@/lib/hooks/useInfiniteScroll';
 import type { WishlistItem } from '@/lib/types';
 
 interface WishlistGridProps {
@@ -13,12 +14,17 @@ interface WishlistGridProps {
   onDelete?: (item: WishlistItem) => void;
   onAddToCollection?: (item: WishlistItem) => void;
   emptyMessage?: string;
+  hasMore?: boolean;
+  onLoadMore?: () => void;
 }
 
-function LoadingSkeleton() {
+// Hoist static array outside component to avoid recreation on each render
+const SKELETON_INDICES = [0, 1, 2, 3, 4, 5, 6, 7];
+
+const WishlistGridSkeleton = memo(function WishlistGridSkeleton() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-      {Array.from({ length: 8 }).map((_, i) => (
+      {SKELETON_INDICES.map((i) => (
         <div key={i} className="animate-pulse">
           <div className="aspect-square bg-steel-800 rounded-lg" />
           <div className="p-3 space-y-2">
@@ -29,9 +35,9 @@ function LoadingSkeleton() {
       ))}
     </div>
   );
-}
+});
 
-export function WishlistGrid({
+export const WishlistGrid = memo(function WishlistGrid({
   items,
   isLoading = false,
   isOwner = false,
@@ -40,9 +46,13 @@ export function WishlistGrid({
   onDelete,
   onAddToCollection,
   emptyMessage = 'No items in your wishlist yet.',
+  hasMore = false,
+  onLoadMore,
 }: WishlistGridProps) {
-  if (isLoading) {
-    return <LoadingSkeleton />;
+  const sentinelRef = useInfiniteScroll({ hasMore, isLoading, onLoadMore });
+
+  if (isLoading && items.length === 0) {
+    return <WishlistGridSkeleton />;
   }
 
   if (items.length === 0) {
@@ -67,24 +77,26 @@ export function WishlistGrid({
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-      {items.map((item, index) => (
-        <motion.div
-          key={item.id}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, delay: index * 0.04, ease: 'easeOut' as const }}
-        >
-          <WishlistCard
-            item={item}
-            isOwner={isOwner}
-            onClick={onItemClick}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onAddToCollection={onAddToCollection}
-          />
-        </motion.div>
-      ))}
-    </div>
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        {items.map((item, index) => (
+          <div
+            key={item.id}
+            className="card-enter"
+            style={{ animationDelay: `${Math.min(index * 0.04, 0.8)}s` }}
+          >
+            <WishlistCard
+              item={item}
+              isOwner={isOwner}
+              onClick={onItemClick}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onAddToCollection={onAddToCollection}
+            />
+          </div>
+        ))}
+      </div>
+      {hasMore && <div ref={sentinelRef} className="h-4" />}
+    </>
   );
-}
+});

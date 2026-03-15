@@ -6,9 +6,13 @@ interface VinylState {
   isLoading: boolean;
   error: string | null;
   filters: VinylFilters;
+  hasMore: boolean;
+  total: number;
+  lastFetchedAt: number | null;
 
   // Actions
   setVinyls: (vinyls: Vinyl[]) => void;
+  appendVinyls: (vinyls: Vinyl[]) => void;
   addVinyl: (vinyl: Vinyl) => void;
   updateVinyl: (id: string, vinyl: Vinyl) => void;
   removeVinyl: (id: string) => void;
@@ -19,21 +23,31 @@ interface VinylState {
   reset: () => void;
 
   // Async actions
-  fetchVinyls: () => Promise<void>;
+  fetchVinyls: (options?: { append?: boolean }) => Promise<void>;
   createVinyl: (data: VinylFormData) => Promise<Vinyl | null>;
   editVinyl: (id: string, data: Partial<VinylFormData>) => Promise<Vinyl | null>;
   deleteVinyl: (id: string) => Promise<boolean>;
 }
+
+const CACHE_TTL_MS = 60_000; // 60 seconds
 
 export const useVinylStore = create<VinylState>((set, get) => ({
   vinyls: [],
   isLoading: true,  // Start as true to prevent empty state flash
   error: null,
   filters: {},
+  hasMore: false,
+  total: 0,
+  lastFetchedAt: null,
 
   // Synchronous actions
   setVinyls: (vinyls) => set({ vinyls }),
-  addVinyl: (vinyl) => set((state) => ({ vinyls: [vinyl, ...state.vinyls] })),
+  appendVinyls: (newVinyls) => set((state) => {
+    const existingIds = new Set(state.vinyls.map((v) => v.id));
+    const unique = newVinyls.filter((v) => !existingIds.has(v.id));
+    return { vinyls: [...state.vinyls, ...unique] };
+  }),
+  addVinyl: (vinyl) => set((state) => ({ vinyls: [vinyl, ...state.vinyls], total: state.total + 1 })),
   updateVinyl: (id, vinyl) =>
     set((state) => ({
       vinyls: state.vinyls.map((v) => (v.id === id ? vinyl : v)),
@@ -41,17 +55,26 @@ export const useVinylStore = create<VinylState>((set, get) => ({
   removeVinyl: (id) =>
     set((state) => ({
       vinyls: state.vinyls.filter((v) => v.id !== id),
+      total: state.total - 1,
     })),
   setLoading: (isLoading) => set({ isLoading }),
   setError: (error) => set({ error }),
   setFilters: (filters) =>
-    set((state) => ({ filters: { ...state.filters, ...filters } })),
-  clearFilters: () => set({ filters: {} }),
-  reset: () => set({ vinyls: [], isLoading: false, error: null, filters: {} }),
+    set((state) => ({ filters: { ...state.filters, ...filters }, lastFetchedAt: null })),
+  clearFilters: () => set({ filters: {}, lastFetchedAt: null }),
+  reset: () => set({ vinyls: [], isLoading: false, error: null, filters: {}, hasMore: false, total: 0, lastFetchedAt: null }),
 
   // Async actions
-  fetchVinyls: async () => {
-    const { filters, setVinyls, setLoading, setError } = get();
+  fetchVinyls: async (options = {}) => {
+    const { append = false } = options;
+    const { filters, vinyls, lastFetchedAt, setVinyls, appendVinyls, setLoading, setError } = get();
+
+    // Stale-while-revalidate: skip fetch if cached data is recent and filters haven't changed
+    if (!append && lastFetchedAt && Date.now() - lastFetchedAt < CACHE_TTL_MS && vinyls.length > 0) {
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -64,6 +87,10 @@ export const useVinylStore = create<VinylState>((set, get) => ({
       if (filters.yearStart) params.append('yearStart', filters.yearStart.toString());
       if (filters.yearEnd) params.append('yearEnd', filters.yearEnd.toString());
 
+      const offset = append ? vinyls.length : 0;
+      params.append('limit', '50');
+      params.append('offset', offset.toString());
+
       const response = await fetch(`/api/vinyls?${params.toString()}`);
       const result = await response.json();
 
@@ -72,7 +99,16 @@ export const useVinylStore = create<VinylState>((set, get) => ({
         return;
       }
 
-      setVinyls(result.data || []);
+      if (append) {
+        appendVinyls(result.data || []);
+      } else {
+        setVinyls(result.data || []);
+      }
+      set({
+        hasMore: result.hasMore ?? false,
+        total: result.total ?? (result.data?.length || 0),
+        lastFetchedAt: Date.now(),
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch vinyls');
     } finally {

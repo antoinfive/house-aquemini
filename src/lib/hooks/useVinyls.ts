@@ -3,15 +3,16 @@
 import { useEffect, useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useVinylStore } from '@/lib/store/vinylStore';
-import type { VinylFilters, VinylFormData } from '@/lib/types';
+import type { Vinyl, VinylFilters, VinylFormData } from '@/lib/types';
 
 interface UseVinylsOptions {
   autoFetch?: boolean;
   filters?: VinylFilters;
+  initialData?: Vinyl[];
 }
 
 export function useVinyls(options: UseVinylsOptions = {}) {
-  const { autoFetch = true, filters } = options;
+  const { autoFetch = true, filters, initialData } = options;
 
   // Combine all selectors into a single shallow selector to reduce subscriptions
   const {
@@ -19,6 +20,8 @@ export function useVinyls(options: UseVinylsOptions = {}) {
     isLoading,
     error,
     storeFilters,
+    hasMore,
+    total,
     fetchVinyls,
     createVinyl,
     editVinyl,
@@ -31,6 +34,8 @@ export function useVinyls(options: UseVinylsOptions = {}) {
       isLoading: state.isLoading,
       error: state.error,
       storeFilters: state.filters,
+      hasMore: state.hasMore,
+      total: state.total,
       fetchVinyls: state.fetchVinyls,
       createVinyl: state.createVinyl,
       editVinyl: state.editVinyl,
@@ -44,6 +49,20 @@ export function useVinyls(options: UseVinylsOptions = {}) {
   const prevFiltersRef = useRef<string | null>(null);
   // Track if initial fetch has been done to prevent duplicate fetches
   const hasFetchedRef = useRef(false);
+  // Track if initial data has been seeded
+  const hasSeededRef = useRef(false);
+
+  // Seed store with server-provided initial data (once)
+  useEffect(() => {
+    if (initialData && !hasSeededRef.current) {
+      hasSeededRef.current = true;
+      hasFetchedRef.current = true;
+      const store = useVinylStore.getState();
+      store.setVinyls(initialData);
+      store.setLoading(false);
+      useVinylStore.setState({ total: initialData.length });
+    }
+  }, [initialData]);
 
   // Set initial filters if provided - compare serialized values to handle object instability
   useEffect(() => {
@@ -64,15 +83,22 @@ export function useVinyls(options: UseVinylsOptions = {}) {
     }
   }, [autoFetch, fetchVinyls]);
 
-  // Refetch when filters change (skip initial empty filters)
+  // Track whether filters have ever been set (to skip only the initial empty state)
+  const filtersEverSetRef = useRef(false);
+
+  // Refetch when filters change (skip only the initial empty filters)
   useEffect(() => {
-    // Only refetch if we've already done the initial fetch and filters have values
-    if (hasFetchedRef.current && Object.keys(storeFilters).length > 0) {
+    if (!hasFetchedRef.current) return;
+    if (Object.keys(storeFilters).length > 0) {
+      filtersEverSetRef.current = true;
+    }
+    if (filtersEverSetRef.current) {
       fetchVinyls();
     }
   }, [storeFilters, fetchVinyls]);
 
   const refetch = () => fetchVinyls();
+  const loadMore = () => fetchVinyls({ append: true });
 
   const addVinyl = async (data: VinylFormData) => {
     const vinyl = await createVinyl(data);
@@ -106,7 +132,10 @@ export function useVinyls(options: UseVinylsOptions = {}) {
     isLoading,
     error,
     filters: storeFilters,
+    hasMore,
+    total,
     refetch,
+    loadMore,
     addVinyl,
     updateVinyl,
     removeVinyl,

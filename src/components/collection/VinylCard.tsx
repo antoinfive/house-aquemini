@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import Image from 'next/image';
 import type { Vinyl } from '@/lib/types';
 import { getGenreColors } from '@/lib/utils/genreColors';
@@ -14,7 +14,7 @@ interface VinylCardProps {
   onClick?: (vinyl: Vinyl) => void;
 }
 
-export function VinylCard({
+export const VinylCard = memo(function VinylCard({
   vinyl,
   isOwner = false,
   onEdit,
@@ -23,7 +23,6 @@ export function VinylCard({
   onClick,
 }: VinylCardProps) {
   const [imageError, setImageError] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   const displayYear = vinyl.release_year ?? vinyl.year;
 
   const handleClick = () => {
@@ -49,8 +48,6 @@ export function VinylCard({
     <div
       className="card-vinyl overflow-hidden cursor-pointer group"
       onClick={handleClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === 'Enter' && handleClick()}
@@ -97,11 +94,9 @@ export function VinylCard({
           )}
         </div>
 
-        {/* Hover Overlay */}
+        {/* Hover Overlay — CSS-only visibility */}
         <div
-          className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-opacity duration-200 z-20 ${
-            isHovered ? 'opacity-100' : 'opacity-0'
-          }`}
+          className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-opacity duration-200 z-20 opacity-0 group-hover:opacity-100"
         >
           <div className="absolute bottom-0 left-0 right-0 p-4">
             <h3 className="text-steel-100 font-semibold text-lg truncate">{vinyl.album}</h3>
@@ -192,4 +187,4 @@ export function VinylCard({
       </div>
     </div>
   );
-}
+});

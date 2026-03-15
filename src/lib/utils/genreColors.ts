@@ -1,9 +1,19 @@
 /**
  * Maps genre names to warm-palette tinted background/text classes.
+ * Uses a Map cache for O(1) repeated lookups.
  */
-export function getGenreColors(genre: string): { bg: string; text: string; border: string } {
-  const normalized = genre.toLowerCase();
 
+interface GenreColorSet {
+  bg: string;
+  text: string;
+  border: string;
+}
+
+const genreColorCache = new Map<string, GenreColorSet>();
+
+const DEFAULT_COLORS: GenreColorSet = { bg: 'bg-steel-700/50', text: 'text-steel-300', border: 'border-steel-600' };
+
+function computeGenreColors(normalized: string): GenreColorSet {
   if (normalized === 'jazz') {
     return { bg: 'bg-amber-400/15', text: 'text-amber-300', border: 'border-amber-400/30' };
   }
@@ -32,6 +42,15 @@ export function getGenreColors(genre: string): { bg: string; text: string; borde
     return { bg: 'bg-pink-400/15', text: 'text-pink-300', border: 'border-pink-400/30' };
   }
 
-  // Default: warm charcoal
-  return { bg: 'bg-steel-700/50', text: 'text-steel-300', border: 'border-steel-600' };
+  return DEFAULT_COLORS;
+}
+
+export function getGenreColors(genre: string): GenreColorSet {
+  const normalized = genre.toLowerCase();
+  const cached = genreColorCache.get(normalized);
+  if (cached) return cached;
+
+  const colors = computeGenreColors(normalized);
+  genreColorCache.set(normalized, colors);
+  return colors;
 }
