@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
+    "backfill:release-years": "tsx scripts/backfill-release-years.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },
