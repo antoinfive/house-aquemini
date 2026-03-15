@@ -94,6 +94,7 @@ export async function POST(request: NextRequest) {
       owner_id: user.id,
       artist: body.artist,
       album: body.album,
+      release_year: body.release_year || body.year || null,
       year: body.year || null,
       label: body.label || null,
       catalog_number: body.catalog_number || null,

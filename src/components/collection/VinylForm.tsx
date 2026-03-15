@@ -51,6 +51,7 @@ export function VinylForm({ initialData, onSubmit, onCancel, isLoading = false }
   const [formData, setFormData] = useState<VinylFormData>(() => ({
     artist: initialData?.artist || '',
     album: initialData?.album || '',
+    release_year: initialData?.release_year || undefined,
     year: initialData?.year || undefined,
     label: initialData?.label || undefined,
     catalog_number: initialData?.catalog_number || undefined,
@@ -180,7 +181,7 @@ export function VinylForm({ initialData, onSubmit, onCancel, isLoading = false }
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Input
-            label="Year"
+            label="Pressing Year"
             name="year"
             type="number"
             value={formData.year || ''}

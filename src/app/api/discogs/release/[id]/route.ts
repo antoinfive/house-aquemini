@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getRelease } from '@/lib/discogs/client';
+import { getMaster, getRelease } from '@/lib/discogs/client';
 import {
   transformReleaseToVinylForm,
   getPrimaryCoverImageUrl,
@@ -41,8 +41,17 @@ export async function GET(
     );
   }
 
+  let releaseYear = data.year;
+
+  if (data.master_id) {
+    const { data: masterData } = await getMaster(data.master_id);
+    if (masterData?.year) {
+      releaseYear = masterData.year;
+    }
+  }
+
   // Transform to vinyl form data
-  const vinyl = transformReleaseToVinylForm(data);
+  const vinyl = transformReleaseToVinylForm(data, { releaseYear });
   const coverImageUrl = getPrimaryCoverImageUrl(data);
 
   return NextResponse.json<ApiResponse<ReleaseResponse>>({

@@ -21,6 +21,7 @@ export interface Vinyl {
   owner_id: string;
   artist: string;
   album: string;
+  release_year: number | null;
   year: number | null;
   label: string | null;
   catalog_number: string | null;
@@ -97,6 +98,7 @@ export interface PaginatedResponse<T> {
 export interface VinylFormData {
   artist: string;
   album: string;
+  release_year?: number;
   year?: number;
   label?: string;
   catalog_number?: string;

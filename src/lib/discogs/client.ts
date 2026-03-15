@@ -1,6 +1,7 @@
 import type {
   DiscogsSearchResponse,
   DiscogsRelease,
+  DiscogsMaster,
   DiscogsRateLimit,
   DiscogsError,
 } from './types';
@@ -138,6 +139,13 @@ export async function getRelease(
   releaseId: number
 ): Promise<{ data: DiscogsRelease | null; error: string | null }> {
   const result = await fetchDiscogs<DiscogsRelease>(`/releases/${releaseId}`);
+  return { data: result.data, error: result.error };
+}
+
+export async function getMaster(
+  masterId: number
+): Promise<{ data: DiscogsMaster | null; error: string | null }> {
+  const result = await fetchDiscogs<DiscogsMaster>(`/masters/${masterId}`);
   return { data: result.data, error: result.error };
 }
 

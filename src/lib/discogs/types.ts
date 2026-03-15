@@ -149,6 +149,12 @@ export interface DiscogsRelease {
   blocked_from_sale?: boolean;
 }
 
+export interface DiscogsMaster {
+  id: number;
+  title: string;
+  year: number;
+}
+
 // API error response
 export interface DiscogsError {
   message: string;

@@ -63,8 +63,15 @@ function transformTracklist(tracklist: DiscogsRelease['tracklist']): Track[] {
     }));
 }
 
+interface TransformReleaseOptions {
+  releaseYear?: number;
+}
+
 // Transform full Discogs release to VinylFormData
-export function transformReleaseToVinylForm(release: DiscogsRelease): VinylFormData {
+export function transformReleaseToVinylForm(
+  release: DiscogsRelease,
+  options: TransformReleaseOptions = {}
+): VinylFormData {
   const artist =
     release.artists?.length > 0
       ? cleanArtistName(release.artists[0].name)
@@ -79,6 +86,7 @@ export function transformReleaseToVinylForm(release: DiscogsRelease): VinylFormD
   return {
     artist,
     album: release.title,
+    release_year: options.releaseYear || release.year || undefined,
     year: release.year || undefined,
     label: label || undefined,
     catalog_number: catalogNumber || undefined,

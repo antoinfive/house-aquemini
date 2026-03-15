@@ -8,6 +8,7 @@ describe('Type definitions', () => {
       owner_id: 'owner-1',
       artist: 'Miles Davis',
       album: 'Kind of Blue',
+      release_year: 1959,
       year: 1959,
       label: 'Columbia',
       catalog_number: 'CL 1355',

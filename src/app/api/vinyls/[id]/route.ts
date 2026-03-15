@@ -63,6 +63,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     .update({
       ...(body.artist !== undefined && { artist: body.artist }),
       ...(body.album !== undefined && { album: body.album }),
+      ...(body.release_year !== undefined && { release_year: body.release_year }),
       ...(body.year !== undefined && { year: body.year }),
       ...(body.label !== undefined && { label: body.label }),
       ...(body.catalog_number !== undefined && { catalog_number: body.catalog_number }),

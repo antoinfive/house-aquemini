@@ -24,6 +24,7 @@ export function VinylCard({
 }: VinylCardProps) {
   const [imageError, setImageError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const displayYear = vinyl.release_year ?? vinyl.year;
 
   const handleClick = () => {
     onClick?.(vinyl);
@@ -105,7 +106,7 @@ export function VinylCard({
           <div className="absolute bottom-0 left-0 right-0 p-4">
             <h3 className="text-steel-100 font-semibold text-lg truncate">{vinyl.album}</h3>
             <p className="text-steel-300 text-sm truncate">{vinyl.artist}</p>
-            {vinyl.year && <p className="text-steel-400 text-sm font-mono">{vinyl.year}</p>}
+            {displayYear && <p className="text-steel-400 text-sm font-mono">{displayYear}</p>}
           </div>
 
           {/* Quick Actions (Owner only) */}
