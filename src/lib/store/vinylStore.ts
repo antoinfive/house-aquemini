@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { Vinyl, VinylFilters, VinylFormData } from '@/lib/types';
+import { filtersAreEqual, mergeFilters } from '@/lib/store/filterUtils';
 
 interface VinylState {
   vinyls: Vinyl[];
@@ -60,7 +61,15 @@ export const useVinylStore = create<VinylState>((set, get) => ({
   setLoading: (isLoading) => set({ isLoading }),
   setError: (error) => set({ error }),
   setFilters: (filters) =>
-    set((state) => ({ filters: { ...state.filters, ...filters }, lastFetchedAt: null })),
+    set((state) => {
+      const nextFilters = mergeFilters(state.filters, filters);
+
+      if (filtersAreEqual(state.filters, nextFilters)) {
+        return state;
+      }
+
+      return { filters: nextFilters, lastFetchedAt: null };
+    }),
   clearFilters: () => set({ filters: {}, lastFetchedAt: null }),
   reset: () => set({ vinyls: [], isLoading: false, error: null, filters: {}, hasMore: false, total: 0, lastFetchedAt: null }),
 

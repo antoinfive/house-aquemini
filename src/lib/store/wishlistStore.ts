@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { WishlistItem, WishlistFilters, WishlistFormData } from '@/lib/types';
+import { filtersAreEqual, mergeFilters } from '@/lib/store/filterUtils';
 
 interface WishlistState {
   items: WishlistItem[];
@@ -63,7 +64,15 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
   setLoading: (isLoading) => set({ isLoading }),
   setError: (error) => set({ error }),
   setFilters: (filters) =>
-    set((state) => ({ filters: { ...state.filters, ...filters }, lastFetchedAt: null })),
+    set((state) => {
+      const nextFilters = mergeFilters(state.filters, filters);
+
+      if (filtersAreEqual(state.filters, nextFilters)) {
+        return state;
+      }
+
+      return { filters: nextFilters, lastFetchedAt: null };
+    }),
   clearFilters: () => set({ filters: {}, lastFetchedAt: null }),
   reset: () => set({ items: [], isLoading: false, error: null, filters: {}, hasMore: false, total: 0, lastFetchedAt: null }),
 

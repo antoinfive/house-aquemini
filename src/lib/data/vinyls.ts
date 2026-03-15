@@ -11,7 +11,9 @@ export async function getVinyls(limit?: number): Promise<Vinyl[]> {
   let query = supabase
     .from('vinyls')
     .select('*')
-    .order('artist', { ascending: true });
+    .order('artist', { ascending: true })
+    .order('album', { ascending: true })
+    .order('id', { ascending: true });
 
   if (limit) {
     query = query.limit(limit);
